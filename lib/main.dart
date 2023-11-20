@@ -1,8 +1,13 @@
+
+import 'dart:convert';
+
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/pages/test_directory_storage/views/test_directory_storage_page.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 
 import 'locals/app_locale.dart';
+import 'locals/local_storage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,7 +61,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const TestDirectoryStorage(),
     );
   }
 }
@@ -92,6 +97,11 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text(AppLocale.currentLanguage.getString(context)),
             ElevatedButton(onPressed: () {
+              final List<CalendarEvent> test = [
+                const CalendarEvent(nb: 11, name: "pixy"),
+                const CalendarEvent(nb: 32, name: "cipher")
+              ];
+              print(jsonEncode(test));
               setState(() {
                 if (AppLocale.currentLanguage.getString(context) == "en") {
                   FlutterLocalization.instance.translate("fr");
