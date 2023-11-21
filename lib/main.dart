@@ -1,8 +1,10 @@
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/Login.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-
 import 'locals/app_locale.dart';
+import 'package:flutter_calendar_app/Subscribe.dart';
+import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
 
 void main() {
   runApp(const MyApp());
@@ -56,7 +58,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(),
+      home: const LoginPage()
     );
   }
 }
@@ -85,6 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(AppLocale.title.getString(context)),
+        automaticallyImplyLeading: false
       ),
       body: Center(
         child: Column(
