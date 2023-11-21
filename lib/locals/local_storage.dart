@@ -23,29 +23,34 @@ class CalendarEvent {
 
 class LocalStorage {
 
-  Future<String> get _localPath async {
+  static const String eventExtension = ".calendarEvent";
+
+  static Future<String> get _localPath async {
     final directory = await getApplicationDocumentsDirectory();
 
     return directory.path;
   }
 
-  Future<File> getLocalFile(String name) async {
+  static Future<File> getLocalFile(String name) async {
     final path = await _localPath;
     return File('$path/$name');
   }
 
-  Future<List<File>> getAllLocalFiles() async {
+  static Future<List<File>> getAllLocalFiles() async {
     String directory = await _localPath;
     final entities = Directory(directory).listSync();
     return entities.whereType<File>().toList();
   }
 
-  Future<void> writeEventsToFile(List<CalendarEvent> events, String filename) async {
+  static Future<void> writeEventsToFile(List<CalendarEvent> events, String filename) async {
+    if (!filename.contains(eventExtension)) {
+      filename = "$filename$eventExtension";
+    }
     final file = await getLocalFile(filename);
     file.writeAsStringSync(jsonEncode(events));
   }
 
-  Future<int> deleteLocalFile(String name) async {
+  static Future<int> deleteLocalFile(String name) async {
     try {
       final path = await _localPath;
       final file = await getLocalFile(name);
@@ -56,7 +61,7 @@ class LocalStorage {
       }
   }
 
-  Future<List<CalendarEvent>> getEventsFromFile(File file) async {
+  static Future<List<CalendarEvent>> getEventsFromFile(File file) async {
     try {
       final contents = await file.readAsString();
       final List<dynamic> list = jsonDecode(contents);
@@ -70,10 +75,18 @@ class LocalStorage {
     }
   }
 
-  /*Future<Sting>
+  static Future<Map<String, List<CalendarEvent>>> getAllEvents() async {
+    final files = await getAllLocalFiles();
+    final Map<String, List<CalendarEvent>> res = {};
+    String filename = "";
 
-  Future<List<Event>> retrieveEventsFromFile(String filename) async {
-
-  }*/
+    for (final file in files) {
+      filename = file.path.split("/").last;
+      if (filename.contains(eventExtension)) {
+        res[filename] = await getEventsFromFile(file);
+      }
+    }
+    return res;
+  }
 
 }
