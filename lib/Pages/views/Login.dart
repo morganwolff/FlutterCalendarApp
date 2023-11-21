@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/Pages/models/LoginModel.dart';
 import 'package:flutter_calendar_app/Pages/views/Subscribe.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
-import 'package:flutter_calendar_app/main.dart';
+import '../viewmodels/LoginVewModel.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -15,6 +16,8 @@ class _LoginPage extends State<LoginPage> {
 
   final studentIdNumberController = TextEditingController();
   final nameController = TextEditingController();
+
+  UserInfosViewModel _userInfos = new UserInfosViewModel();
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +72,7 @@ class _LoginPage extends State<LoginPage> {
 
                 // usesrname textfield
                 TextFieldLoginSubscribe(
-                  controller: studentIdNumberController,
+                  controller: _userInfos.set_studentIdNumberController(),
                   hintText: "Student Id N°",
                   obscureText: false,
                   numberKeyBoard: true,
@@ -78,7 +81,7 @@ class _LoginPage extends State<LoginPage> {
 
                 // password textfield
                 TextFieldLoginSubscribe(
-                  controller: nameController,
+                  controller: _userInfos.set_usernameController(),
                   hintText: "Username",
                   obscureText: false,
                   numberKeyBoard: false,
@@ -89,8 +92,16 @@ class _LoginPage extends State<LoginPage> {
 
                 ElevatedButton(
                   onPressed: () {
-                    // Add your logic here
-                    print('Button pressed');
+                    String studentIdNumber = studentIdNumberController.text;
+
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SubscribePage(),
+                      ),
+                    );
+                    _userInfos.fetchData();
+                    print('Student Id Number --> ${_userInfos.get_studentIdNumberController().text} / username --> ${_userInfos.get_usernameController().text}');
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
@@ -108,7 +119,7 @@ class _LoginPage extends State<LoginPage> {
 
                 SizedBox(height: 30),
 
-                GestureDetector(
+                /*GestureDetector(
                   onTap: () {
                     // Navigate to the second view and replace the current screen
                     Navigator.pushReplacement(
@@ -126,7 +137,7 @@ class _LoginPage extends State<LoginPage> {
                       decoration: TextDecoration.underline,
                     ),
                   ),
-                ),
+                ),*/
               ],
             )
 
