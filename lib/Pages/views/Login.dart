@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_app/Subscribe.dart';
+import 'package:flutter_calendar_app/Pages/views/Subscribe.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
 import 'package:flutter_calendar_app/main.dart';
 
@@ -14,7 +14,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPage extends State<LoginPage> {
 
   final studentIdNumberController = TextEditingController();
-  final passwordController = TextEditingController();
+  final nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +34,16 @@ class _LoginPage extends State<LoginPage> {
                   height: 180, // Adjust the height as needed
                 ),
 
+                SizedBox(height: 25),
 
+                Icon(
+                  Icons.lock_open,
+                  color: Colors.grey[700],
+                  size: 25.0,
+                  semanticLabel: 'Text to announce in accessibility modes',
+                ),
 
-                SizedBox(height: 35),
+                SizedBox(height: 20),
 
                 //Welcome Back
 
@@ -71,9 +78,9 @@ class _LoginPage extends State<LoginPage> {
 
                 // password textfield
                 TextFieldLoginSubscribe(
-                  controller: passwordController,
-                  hintText: "Password",
-                  obscureText: true,
+                  controller: nameController,
+                  hintText: "Username",
+                  obscureText: false,
                   numberKeyBoard: false,
                 ),
 

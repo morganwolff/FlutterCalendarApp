@@ -1,10 +1,9 @@
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_app/Login.dart';
+import 'package:flutter_calendar_app/Pages/views/Login.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'locals/app_locale.dart';
-import 'package:flutter_calendar_app/Subscribe.dart';
-import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
+
 
 void main() {
   runApp(const MyApp());
