@@ -5,6 +5,10 @@ import '../models/MeetingModel.dart';
 
 class CalendarEventProvider with ChangeNotifier {
   CalendarView _calendarView = CalendarView.week;
+  int _selectedDrawerIndex = 2;
+  bool _chungAngCalendar = false;
+  bool _personalCalendar = true;
+
   String _title = '';
   String _description = '';
   DateTime _startDate = DateTime.now();
@@ -13,7 +17,7 @@ class CalendarEventProvider with ChangeNotifier {
   TimeOfDay _endTime = TimeOfDay(hour: TimeOfDay.now().hour + 2, minute: 0);
   Color _eventColor = Colors.blue;
   bool _isAllDay = false;
-  int _selectedDrawerIndex = 2;
+
   List<Meeting> _meetings = <Meeting>[];
 
   // Getters
@@ -28,6 +32,8 @@ class CalendarEventProvider with ChangeNotifier {
   int get selectedDrawerIndex => _selectedDrawerIndex;
   bool get isAllDay => _isAllDay;
   List<Meeting> get meetingsList => _meetings;
+  bool get chungAngCalendar=> _chungAngCalendar;
+  bool get personalCalendar => _personalCalendar;
 
   // Setters
   void setCalendarView(CalendarView view) {
@@ -80,6 +86,15 @@ class CalendarEventProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setChungAngCalendar(bool value) {
+    _chungAngCalendar = value;
+    notifyListeners();
+  }
+  void setPersonalCalendar(bool value) {
+    _personalCalendar = value;
+    notifyListeners();
+  }
+
   void resetEventVariables() {
     _title = '';
     _description = '';
@@ -101,18 +116,18 @@ class CalendarEventProvider with ChangeNotifier {
     );
 
     if (picked != null && picked != (isStartDate ? _startDate : _endDate)) {
-        if (isStartDate) {
-          _startDate = picked;
-        } else {
-          _endDate = picked;
-        }
+      if (isStartDate) {
+        _startDate = picked;
+      } else {
+        _endDate = picked;
+      }
     }
     notifyListeners();
   }
 
   Future<void> selectTime(BuildContext context, bool isStartTime) async {
     final TimeOfDay initialTime =
-        isStartTime ? _startTime : _endTime;
+    isStartTime ? _startTime : _endTime;
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: initialTime,
@@ -153,5 +168,3 @@ class CalendarEventProvider with ChangeNotifier {
     // TODO: Implement the function
   }
 }
-
-

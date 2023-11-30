@@ -16,6 +16,7 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late MeetingDataSource meetingDataSource;
+  CalendarController _controller = CalendarController();
 
   @override
   Widget build(BuildContext context) {
@@ -43,10 +44,13 @@ class _CalendarPageState extends State<CalendarPage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              decoration: BoxDecoration(color: Colors.blue),
-              child: Text('Flutter Calendar APP',
-                  style: TextStyle(color: Colors.white, fontSize: 24)),
+            SizedBox(
+              height: 100,
+              child: DrawerHeader(
+                decoration: BoxDecoration(color: Colors.blue),
+                child: Text('Flutter Calendar APP',
+                    style: TextStyle(color: Colors.white, fontSize: 24)),
+              ),
             ),
             DrawerItemWidget(
                 icon: Icons.view_agenda_outlined,
@@ -71,6 +75,28 @@ class _CalendarPageState extends State<CalendarPage> {
               view: CalendarView.month,
               index: 3,
             ),
+            Divider(),
+            SwitchListTile(
+              title: const Text('Chung Ang'),
+              value: provider.chungAngCalendar,
+              onChanged: (bool value) {
+                setState(() {
+                  provider.setChungAngCalendar(value);
+                });
+              },
+              secondary: const Icon(Icons.school),
+            ),
+            SwitchListTile(
+              title: const Text('Personal'),
+              value: provider.personalCalendar,
+              onChanged: (bool value) {
+                setState(() {
+                  provider.setPersonalCalendar(value);
+                });
+              },
+              secondary: const Icon(Icons.person),
+            ),
+            Divider(),
           ],
         ),
       ),
@@ -79,6 +105,26 @@ class _CalendarPageState extends State<CalendarPage> {
         view: provider.calendarView,
         firstDayOfWeek: 1,
         dataSource: MeetingDataSource(provider.meetingsList),
+        monthViewSettings: const MonthViewSettings(
+            showAgenda: true,
+            agendaStyle: AgendaStyle(
+              backgroundColor: Colors.white60,
+              appointmentTextStyle: TextStyle(
+                  fontSize: 14,
+                  fontStyle: FontStyle.italic,
+                  color: Colors.white),
+              dateTextStyle: TextStyle(
+                  fontStyle: FontStyle.normal,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                  color: Colors.black),
+              dayTextStyle: TextStyle(
+                  fontStyle: FontStyle.normal,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.black),
+            )
+        ),
       ),
     );
   }
