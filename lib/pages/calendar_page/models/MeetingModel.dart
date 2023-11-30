@@ -57,4 +57,19 @@ class Meeting {
     required this.title,
     required this.background,
     required this.isAllDay});
+
+  Meeting.fromJson(Map<String, dynamic> json):
+      from = DateTime.parse(json["from"]),
+      to = DateTime.parse(json["to"]),
+      title = json["title"],
+      background = Color(json["background"]),
+      isAllDay = json["isAllDay"];
+
+  Map toJson() => {
+    "from": from.toIso8601String(),
+    "to": to.toIso8601String(),
+    "title": title,
+    "background": background.value,
+    "isAllDay": isAllDay
+  };
 }

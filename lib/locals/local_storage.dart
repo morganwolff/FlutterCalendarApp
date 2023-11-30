@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:flutter_calendar_app/pages/calendar_page/models/MeetingModel.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
-class CalendarEvent {
+/*class CalendarEvent {
 
   const CalendarEvent({required this.nb, required this.name});
 
@@ -19,7 +20,7 @@ class CalendarEvent {
       "nb": nb,
       "name": name,
     };
-}
+}*/
 
 class LocalStorage {
 
@@ -42,7 +43,7 @@ class LocalStorage {
     return entities.whereType<File>().toList();
   }
 
-  static Future<void> writeEventsToFile(List<CalendarEvent> events, String filename) async {
+  static Future<void> writeEventsToFile(List<Meeting> events, String filename) async {
     if (!filename.contains(eventExtension)) {
       filename = "$filename$eventExtension";
     }
@@ -61,11 +62,11 @@ class LocalStorage {
       }
   }
 
-  static Future<List<CalendarEvent>> getEventsFromFile(File file) async {
+  static Future<List<Meeting>> getEventsFromFile(File file) async {
     try {
       final contents = await file.readAsString();
       final List<dynamic> list = jsonDecode(contents);
-      final List<CalendarEvent> res = [];
+      final List<Meeting> res = [];
       for (var event in list) {
         res.add(event);
       }
@@ -75,9 +76,9 @@ class LocalStorage {
     }
   }
 
-  static Future<Map<String, List<CalendarEvent>>> getAllEvents() async {
+  static Future<Map<String, List<Meeting>>> getAllEvents() async {
     final files = await getAllLocalFiles();
-    final Map<String, List<CalendarEvent>> res = {};
+    final Map<String, List<Meeting>> res = {};
     String filename = "";
 
     for (final file in files) {

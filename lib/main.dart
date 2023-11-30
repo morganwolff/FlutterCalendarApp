@@ -4,22 +4,26 @@ import 'dart:convert';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
+import 'package:flutter_calendar_app/pages/test_directory_storage/views/test_directory_storage_page.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:flutter_calendar_app/Pages/views/Login.dart';
+import 'package:flutter_calendar_app/pages/to_do_list/viewmodels/to_do_list_provider.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'package:provider/provider.dart';
+
+import 'common/components/TabBarNavigation.dart';
 import 'locals/app_locale.dart';
 import 'locals/local_storage.dart';
 
 
-import 'common/components/TabBarNavigation.dart';void main() {
+void main() {
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => CalendarEventProvider()),
-      ],
-      child: const MyApp(),
-    ),
+      MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => ToDoListProvider())
+          ],
+          child: const MyApp(),
+      )
   );
 }
 
@@ -71,7 +75,8 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const TabBarPage(),
+//      home: const TabBarPage(),
+        home: const TestDirectoryStorage()
       //home: const LoginPage()
     );
   }
@@ -109,11 +114,6 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             Text(AppLocale.currentLanguage.getString(context)),
             ElevatedButton(onPressed: () {
-              final List<CalendarEvent> test = [
-                const CalendarEvent(nb: 11, name: "pixy"),
-                const CalendarEvent(nb: 32, name: "cipher")
-              ];
-              print(jsonEncode(test));
               setState(() {
                 if (AppLocale.currentLanguage.getString(context) == "en") {
                   FlutterLocalization.instance.translate("fr");

@@ -18,7 +18,7 @@ class CalendarEventProvider with ChangeNotifier {
   Color _eventColor = Colors.blue;
   bool _isAllDay = false;
 
-  List<Meeting> _meetings = <Meeting>[];
+  final List<Meeting> _meetings = <Meeting>[];
 
   // Getters
   CalendarView get calendarView => _calendarView;
