@@ -20,7 +20,8 @@ void main() {
   runApp(
       MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ToDoListProvider())
+            ChangeNotifierProvider(create: (_) => ToDoListProvider()),
+            ChangeNotifierProvider(create: (_) => CalendarEventProvider()),
           ],
           child: const MyApp(),
       )
@@ -75,8 +76,8 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-//      home: const TabBarPage(),
-        home: const TestDirectoryStorage()
+        home: const TabBarPage(),
+        //home: const TestDirectoryStorage()
       //home: const LoginPage()
     );
   }
