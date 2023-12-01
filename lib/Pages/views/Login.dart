@@ -1,8 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_app/Pages/models/LoginModel.dart';
-import 'package:flutter_calendar_app/Pages/views/Subscribe.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
+import 'package:flutter_calendar_app/main.dart';
 import '../viewmodels/LoginVewModel.dart';
+import '../views/Subscribe.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -14,31 +15,30 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPage extends State<LoginPage> {
 
-  final studentIdNumberController = TextEditingController();
-  final nameController = TextEditingController();
-
   UserInfosViewModel _userInfos = new UserInfosViewModel();
+
+  final _authentication = FirebaseAuth.instance;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
-
-        body: Center(
+    return  Scaffold(
+        body: Form(
+            key: _formKey,
             child: Column(
               children: [
 
                 //Logo
                 SizedBox(height: 70),
-
                 Image.asset(
-                  'assets/ChungAng_Logo.png', // Replace with the path to your image file
-                  width: 180, // Adjust the width as needed
-                  height: 180, // Adjust the height as needed
+                  'assets/LogoCAU2.png',
+                  width: 180,
+                  height: 180,
                 ),
 
+                //Logo
                 SizedBox(height: 25),
-
                 Icon(
                   Icons.lock_open,
                   color: Colors.grey[700],
@@ -46,10 +46,8 @@ class _LoginPage extends State<LoginPage> {
                   semanticLabel: 'Text to announce in accessibility modes',
                 ),
 
+                //Title
                 SizedBox(height: 20),
-
-                //Welcome Back
-
                 Text(
                   "CONNECTION",
                   style: TextStyle(
@@ -59,8 +57,8 @@ class _LoginPage extends State<LoginPage> {
                   ),
                 ),
 
+                //Description
                 SizedBox(height: 5),
-
                 Text(
                   "WELCOME BACK TO YOUR CALENDAR",
                   style: TextStyle(
@@ -70,38 +68,78 @@ class _LoginPage extends State<LoginPage> {
                 ),
                 SizedBox(height: 35),
 
-                // usesrname textfield
+                // e-mail textfield
                 TextFieldLoginSubscribe(
-                  controller: _userInfos.set_studentIdNumberController(),
-                  hintText: "Student Id N°",
+                  controller: _userInfos.set_emailController(),
+                  hintText: "E-mail",
                   obscureText: false,
-                  numberKeyBoard: true,
+                  numberKeyBoard: false,
                 ),
                 SizedBox(height: 30),
 
                 // password textfield
                 TextFieldLoginSubscribe(
-                  controller: _userInfos.set_usernameController(),
-                  hintText: "Username",
-                  obscureText: false,
+                  controller: _userInfos.set_passwordController(),
+                  hintText: "Password",
+                  obscureText: true,
                   numberKeyBoard: false,
                 ),
 
                 // Sign in button with Chung-Ang University Logo
-                SizedBox(height: 50),
+                SizedBox(height: 30),
 
                 ElevatedButton(
-                  onPressed: () {
-                    String studentIdNumber = studentIdNumberController.text;
+                  onPressed: () async {
 
-                    Navigator.pushReplacement(
+                    if (await _userInfos.validateValue()) {
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text(_userInfos.get_title()),
+                            content: Text('${_userInfos.get_errorMessage()}'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('Ok'),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+
+                      try {
+
+                        final currentUser = await _authentication
+                            .signInWithEmailAndPassword(
+                            email: _userInfos.get_emailController().text, password: _userInfos.get_passwordController().text);
+
+                        if (currentUser.user != null) {
+                          _formKey.currentState!.reset();
+                        }
+
+
+                      } catch(e) {
+                        print (e);
+                      }
+                    }
+
+                    /*Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SubscribePage(),
+                        builder: (context) => MyHomePage(),
                       ),
                     );
-                    _userInfos.fetchData();
-                    print('Student Id Number --> ${_userInfos.get_studentIdNumberController().text} / username --> ${_userInfos.get_usernameController().text}');
+                    await _userInfos.fetchData();
+                    print('Student Id Number --> ${_userInfos.get_emailController().text} / username --> ${_userInfos.get_passwordController().text}');
+                    if (_userInfos.get_planningWeekCau() != null) {
+                      print('Planning CAU Week --> ${_userInfos
+                          .get_planningWeekCau()}');
+                    }*/
+
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
@@ -117,12 +155,12 @@ class _LoginPage extends State<LoginPage> {
                   ),
                 ),
 
-                SizedBox(height: 30),
+                SizedBox(height: 15),
 
-                /*GestureDetector(
+                GestureDetector(
                   onTap: () {
                     // Navigate to the second view and replace the current screen
-                    Navigator.pushReplacement(
+                    Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => SubscribePage(),
@@ -137,7 +175,7 @@ class _LoginPage extends State<LoginPage> {
                       decoration: TextDecoration.underline,
                     ),
                   ),
-                ),*/
+                ),
               ],
             )
 
@@ -146,3 +184,4 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 }
+

@@ -2,14 +2,22 @@
 import 'dart:convert';
 
 import 'package:devicelocale/devicelocale.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/Pages/views/Login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_calendar_app/firebase_options.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'locals/app_locale.dart';
 import 'locals/local_storage.dart';
 
+void main() async {
 
-void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(const MyApp());
 }
 
@@ -61,7 +69,17 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginPage()
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return const  MyHomePage();
+          }
+          else {
+            return const LoginPage();
+          }
+        },
+      ),
     );
   }
 }
@@ -75,6 +93,29 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+  final _authentication = FirebaseAuth.instance;
+  User? loggedUser;
+
+  @override
+
+  void initState() {
+    super.initState();
+    getCurrentUser();
+  }
+
+  void getCurrentUser() {
+    try {
+      final user = _authentication.currentUser;
+      if (user != null) {
+        loggedUser = user;
+      }
+    } catch (e) {
+      print (e);
+    }
+
+  }
+
   int _counter = 0;
 
   void _incrementCounter() {
@@ -90,7 +131,13 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(AppLocale.title.getString(context)),
-        automaticallyImplyLeading: false
+        automaticallyImplyLeading: false,
+        actions: [
+          IconButton(onPressed: ()
+          {
+            FirebaseAuth.instance.signOut();
+          }, icon: Icon(Icons.logout)),
+        ],
       ),
       body: Center(
         child: Column(

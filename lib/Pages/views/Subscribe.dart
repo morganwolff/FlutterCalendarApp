@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/Pages/viewmodels/SubscribeViewModel.dart';
 import 'package:flutter_calendar_app/Pages/views/Login.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
-import 'package:flutter_calendar_app/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SubscribePage extends StatefulWidget {
   const SubscribePage({super.key});
@@ -13,20 +14,20 @@ class SubscribePage extends StatefulWidget {
 
 class _SubscribePage extends State<SubscribePage> {
 
-  final studentIdNumberController = TextEditingController();
-  final confirmStudentIdNumberController = TextEditingController();
-  final passwordController = TextEditingController();
+  subscribeViewModel _subscribeInfos = new subscribeViewModel();
 
   var error = false;
   var ErrorMsg = "";
-
+  final _formKey = GlobalKey<FormState>();
+  final _authentification = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
 
-      body: Center(
+      body: Form(
+        key: _formKey,
         child: Column(
             children: [
 
@@ -35,13 +36,22 @@ class _SubscribePage extends State<SubscribePage> {
 
               Image.asset(
                 'assets/ChungAng_Logo.png', // Replace with the path to your image file
-                width: 180, // Adjust the width as needed
-                height: 180, // Adjust the height as needed
+                width: 130, // Adjust the width as needed
+                height: 130, // Adjust the height as needed
               ),
 
 
 
-              SizedBox(height: 35),
+              SizedBox(height: 25),
+
+              Icon(
+                Icons.verified_outlined,
+                color: Colors.grey[700],
+                size: 25.0,
+                semanticLabel: 'Text to announce in accessibility modes',
+              ),
+
+              SizedBox(height: 15),
 
               //Welcome Back
 
@@ -54,83 +64,87 @@ class _SubscribePage extends State<SubscribePage> {
                 ),
               ),
 
-              SizedBox(height: 5),
-
-              Text(
-                "WELCOME BACK TO YOUR CALENDAR",
-                style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 15
-                ),
-              ),
-              SizedBox(height: 35),
+              SizedBox(height: 20),
 
               // usesrname textfield
               TextFieldLoginSubscribe(
-                controller: studentIdNumberController,
+                controller: _subscribeInfos.set_studentIdNumberController(),
                 hintText: "Student Id N°",
                 obscureText: false,
                 numberKeyBoard: true,
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 15),
 
               TextFieldLoginSubscribe(
-                controller: confirmStudentIdNumberController,
-                hintText: "Confirm Student Id N°",
+                controller: _subscribeInfos.set_usernameController(),
+                hintText: "Username",
                 obscureText: false,
-                numberKeyBoard: true,
+                numberKeyBoard: false,
               ),
-              SizedBox(height: 30),
+              SizedBox(height: 15),
+
+              TextFieldLoginSubscribe(
+                controller: _subscribeInfos.set_emailController(),
+                hintText: "E-mail",
+                obscureText: false,
+                numberKeyBoard: false,
+              ),
+              SizedBox(height: 15),
 
               // password textfield
               TextFieldLoginSubscribe(
-                controller: passwordController,
+                controller: _subscribeInfos.set_passwordController(),
                 hintText: "Password",
                 obscureText: true,
                 numberKeyBoard: false,
               ),
 
               // Sign in button with Chung-Ang University Logo
-              SizedBox(height: 35),
+              SizedBox(height: 20),
 
               ElevatedButton(
-                onPressed: () {
-                  // Add your logic here
-                  if (studentIdNumberController.toString() != confirmStudentIdNumberController.toString()) {
-                    error = true;
-                    ErrorMsg = "Student IDs do not match.";
-                  }
-                  if (passwordController.toString().length != 0) {
-                    error = true;
-                    ErrorMsg = "Password is empty.";
-                  }
-                  if (studentIdNumberController.toString().length != 0) {
-                    error = true;
-                    ErrorMsg = "Student Id number is empty.";
-                  }
+                onPressed: () async {
 
-                  if (error == true) {
+                  if (await _subscribeInfos.validateValue()) {
+
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
                         return AlertDialog(
-                          title: Text('Error'),
-                          content: Text('${ErrorMsg}'),
+                          title: Text(_subscribeInfos.get_title()),
+                          content: Text('${_subscribeInfos.get_errorMessage()}'),
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
-                                // Close the dialog
                                 Navigator.of(context).pop();
                               },
-                              child: Text('OK'),
+                              child: Text('Ok'),
                             ),
                           ],
                         );
                       },
                     );
+
                   } else {
-                    print("Button is pressed!");
+
+                    try {
+                      final _newUser = await _authentification
+                          .createUserWithEmailAndPassword(
+                          email: _subscribeInfos.get_emailController().text, password: _subscribeInfos.get_passwordController().text);
+                      if (_newUser.user != null) {
+                        _formKey.currentState!.reset();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ),
+                        );
+                      }
+                    } catch(e) {
+                      print(e);
+                    }
                   }
+
 
                 },
                 style: ButtonStyle(
