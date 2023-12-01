@@ -1,9 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
-import 'package:flutter_calendar_app/main.dart';
 import '../viewmodels/LoginVewModel.dart';
+import '../models/UserInformationModel.dart';
 import '../views/Subscribe.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -20,8 +21,11 @@ class _LoginPage extends State<LoginPage> {
   final _authentication = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
 
+
   @override
   Widget build(BuildContext context) {
+
+    final _userInfosProvider = Provider.of<UserInformationModel>(context, listen: false);
 
     return  Scaffold(
         body: Form(
@@ -113,33 +117,54 @@ class _LoginPage extends State<LoginPage> {
 
                       try {
 
-                        final currentUser = await _authentication
-                            .signInWithEmailAndPassword(
-                            email: _userInfos.get_emailController().text, password: _userInfos.get_passwordController().text);
+                        // This function fill _userInfos.get_username() / _userInfos.get_student_id() / _userInfos.get_planningWeekCau()
+                        if (await _userInfos.get_user_data_firebase(_userInfos.get_emailController().text)) {
 
-                        if (currentUser.user != null) {
-                          _formKey.currentState!.reset();
+                          _userInfosProvider.set_username(
+                              _userInfos.get_username());
+                          _userInfosProvider.set_student_id(
+                              _userInfos.get_student_id());
+                          _userInfosProvider.set_planningCau(
+                              _userInfos.get_planningWeekCau());
+
+                          final currentUser = await _authentication
+                              .signInWithEmailAndPassword(
+                              email: _userInfos
+                                  .get_emailController()
+                                  .text, password: _userInfos
+                              .get_passwordController()
+                              .text);
+
+
+                          if (currentUser.user != null) {
+                            _formKey.currentState!.reset();
+                          }
                         }
 
+                        else {
+                          showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Text("Error: Connection"),
+                                content: Text('Email or Password is wrong'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: Text('Ok'),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
 
                       } catch(e) {
                         print (e);
                       }
                     }
-
-                    /*Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => MyHomePage(),
-                      ),
-                    );
-                    await _userInfos.fetchData();
-                    print('Student Id Number --> ${_userInfos.get_emailController().text} / username --> ${_userInfos.get_passwordController().text}');
-                    if (_userInfos.get_planningWeekCau() != null) {
-                      print('Planning CAU Week --> ${_userInfos
-                          .get_planningWeekCau()}');
-                    }*/
-
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
@@ -159,7 +184,6 @@ class _LoginPage extends State<LoginPage> {
 
                 GestureDetector(
                   onTap: () {
-                    // Navigate to the second view and replace the current screen
                     Navigator.push(
                       context,
                       MaterialPageRoute(

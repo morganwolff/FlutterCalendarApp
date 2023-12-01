@@ -3,6 +3,7 @@ import 'package:flutter_calendar_app/Pages/viewmodels/SubscribeViewModel.dart';
 import 'package:flutter_calendar_app/Pages/views/Login.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SubscribePage extends StatefulWidget {
   const SubscribePage({super.key});
@@ -23,6 +24,8 @@ class _SubscribePage extends State<SubscribePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     return Scaffold(
 
@@ -128,11 +131,20 @@ class _SubscribePage extends State<SubscribePage> {
                   } else {
 
                     try {
+
                       final _newUser = await _authentification
                           .createUserWithEmailAndPassword(
                           email: _subscribeInfos.get_emailController().text, password: _subscribeInfos.get_passwordController().text);
+
                       if (_newUser.user != null) {
                         _formKey.currentState!.reset();
+
+                        users.add({
+                          'email': _subscribeInfos.get_emailController().text,
+                          'student_id': _subscribeInfos.get_studentIdNumberController().text,
+                          'username': _subscribeInfos.get_usernameController().text
+                        }).catchError((error) => print('Failed to add user firestore: $error'));
+
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
@@ -141,6 +153,27 @@ class _SubscribePage extends State<SubscribePage> {
                         );
                       }
                     } catch(e) {
+                      if (e.toString().contains("email address is already")) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text("ERROR: Email"),
+                              content: Text(
+                                  'The email is already used. You should change the email address.'),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('Ok'),
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+
                       print(e);
                     }
                   }

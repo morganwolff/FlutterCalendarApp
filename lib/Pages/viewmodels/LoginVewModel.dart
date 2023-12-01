@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/Pages/models/LoginModel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserInfosViewModel {
 
@@ -17,7 +17,7 @@ class UserInfosViewModel {
     return _userInfosModel.emailController;
   }
 
-  /////////////////// USERNAME  ///////////////////
+  /////////////////// PASSWORD  ///////////////////
   TextEditingController get_passwordController() {
     return _userInfosModel.passwordController;
   }
@@ -26,12 +26,9 @@ class UserInfosViewModel {
     return _userInfosModel.passwordController;
   }
 
-  List get_planningWeekCau() {
-    return _userInfosModel.planningCau;
-  }
 
-  /////////////////// Get/Set Title/ErrorMessage  ///////////////////
 
+  /////////////////// Get/Set PlanningCau  ///////////////////
   String get_title() {
     return _userInfosModel.titleDialog;
   }
@@ -40,6 +37,43 @@ class UserInfosViewModel {
     return _userInfosModel.errorMessageDialog;
   }
 
+  /////////////////// PlanningCau  ///////////////////
+  List get_planningWeekCau() {
+    return _userInfosModel.planningCau;
+  }
+
+  /////////////////// Get/Set PlanningCau  ///////////////////
+  String get_username() {
+    return _userInfosModel.username;
+  }
+
+  /////////////////// Get/Set Title/ErrorMessage  ///////////////////
+
+  String get_student_id() {
+    return _userInfosModel.student_id;
+  }
+
+  /////////////////// GET DATA FIRESTORE  ///////////////////
+  Future<bool> get_user_data_firebase(String _email) async {
+    final CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+
+    QuerySnapshot querySnapshot = await users.where('email', isEqualTo: _email).get();
+    if (querySnapshot.docs.isNotEmpty) {
+      var document = querySnapshot.docs.first;
+
+      _userInfosModel.username = document['username'];
+      _userInfosModel.student_id = document['student_id'];
+      // Function that filled the variable planningCau in UserInfosModel
+      await fetchData(document['student_id']);
+
+      return true;
+
+    } else {
+
+      return false;
+    }
+  }
   /////////////////// TRANSLATE TIME  ///////////////////
   String translateEnglishTime (String time) {
 
@@ -67,13 +101,11 @@ class UserInfosViewModel {
       var newTime = timePm[checkTimeInMap]! + time[2] + time[3] + time[4] + " pm";
       return newTime.toString();
 
-      return time;
     } else {
-      return time + " am"; // Or handle the case as needed
-    }
 
-    print(time);
-    return time;
+      return time + " am"; // Or handle the case as needed
+
+    }
   }
 
 
@@ -193,14 +225,14 @@ class UserInfosViewModel {
   }
 
   /////////////////// GET DATA PLANNING OF CHUNG ANG UNIVERSITY  ///////////////////
-  Future<void> fetchData() async {
-    /*const apiUrl = "https://mportal.cau.ac.kr/portlet/p006/p006List.ajax";
+  Future<void> fetchData(String _studentId) async {
+    const apiUrl = "https://mportal.cau.ac.kr/portlet/p006/p006List.ajax";
     final Map<String, String> headers = {
       'Content-Type': 'application/json', // Adjust the content type as needed
     };
 
     final Map<String, dynamic> requestBody = {
-      'userId': get_emailController().text,
+      'userId': _studentId,
     };
     try {
       final response = await http.post(
@@ -224,7 +256,7 @@ class UserInfosViewModel {
     } catch (error) {
       // Handle network errors or any other exceptions that might occur during the HTTP request
       print("Error: $error");
-    }*/
+    }
   }
 
   UserInfosViewModel();

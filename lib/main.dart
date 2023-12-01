@@ -1,6 +1,6 @@
 
 import 'dart:convert';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:devicelocale/devicelocale.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -8,8 +8,11 @@ import 'package:flutter_calendar_app/Pages/views/Login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_calendar_app/firebase_options.dart';
 import 'package:flutter_localization/flutter_localization.dart';
+import 'Pages/models/UserInformationModel.dart';
 import 'locals/app_locale.dart';
 import 'locals/local_storage.dart';
+import 'package:provider/provider.dart';
+
 
 void main() async {
 
@@ -18,7 +21,14 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserInformationModel()),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -60,6 +70,7 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       title: 'Calendar App',
       locale: const Locale('en', 'US'),
@@ -95,12 +106,19 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   final _authentication = FirebaseAuth.instance;
+  var _username = "";
   User? loggedUser;
 
   @override
 
   void initState() {
     super.initState();
+
+    FirebaseFirestore.instance.settings = Settings(
+      persistenceEnabled: true,
+      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
+    );
+
     getCurrentUser();
   }
 
@@ -115,6 +133,8 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
   }
+
+
 
   int _counter = 0;
 
@@ -143,6 +163,26 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+
+            Container(
+              height: 250,
+              padding: const EdgeInsets.symmetric(vertical: 20),
+              child: Consumer<UserInformationModel>(
+                builder: (context, userInfoModel, child) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Text('Username: ${userInfoModel.username}'),
+                      Text('Student ID: ${userInfoModel.studentId}'),
+                      Text('Planning Cau: ${userInfoModel.planningCau.toString()}'),
+                    ],
+                  );
+                },
+              ),
+            ),
+
+
             Text(AppLocale.currentLanguage.getString(context)),
             ElevatedButton(onPressed: () {
               final List<CalendarEvent> test = [
