@@ -3,7 +3,6 @@ import 'package:flutter_calendar_app/Pages/viewmodels/SubscribeViewModel.dart';
 import 'package:flutter_calendar_app/Pages/views/Login.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class SubscribePage extends StatefulWidget {
   const SubscribePage({super.key});
@@ -24,8 +23,6 @@ class _SubscribePage extends State<SubscribePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    CollectionReference users = FirebaseFirestore.instance.collection('users');
 
     return Scaffold(
 
@@ -136,21 +133,17 @@ class _SubscribePage extends State<SubscribePage> {
                           .createUserWithEmailAndPassword(
                           email: _subscribeInfos.get_emailController().text, password: _subscribeInfos.get_passwordController().text);
 
-                      if (_newUser.user != null) {
-                        _formKey.currentState!.reset();
+                      if (await _subscribeInfos.insertDataFireStore(_subscribeInfos.get_emailController().text, _subscribeInfos.get_studentIdNumberController().text,_subscribeInfos.get_usernameController().text)) {
+                        if (_newUser.user != null) {
+                          _formKey.currentState!.reset();
 
-                        users.add({
-                          'email': _subscribeInfos.get_emailController().text,
-                          'student_id': _subscribeInfos.get_studentIdNumberController().text,
-                          'username': _subscribeInfos.get_usernameController().text
-                        }).catchError((error) => print('Failed to add user firestore: $error'));
-
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => LoginPage(),
-                          ),
-                        );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => LoginPage(),
+                            ),
+                          );
+                        }
                       }
                     } catch(e) {
                       if (e.toString().contains("email address is already")) {

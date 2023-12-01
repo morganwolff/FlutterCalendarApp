@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_app/Pages/models/LoginModel.dart';
 import 'package:flutter_calendar_app/Pages/models/SubscribeModel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class subscribeViewModel {
 
@@ -104,8 +103,26 @@ class subscribeViewModel {
 
   //////////// Insert Data Into Firebase //////////////
 
-  Future<bool> insertData() async {
-    return (true);
+  Future<bool> insertDataFireStore(String _email, String _student_id, String _username) async {
+    final CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+    try {
+      users.add({
+        'email': _email,
+        'student_id': _student_id,
+        'username': _username
+      }).catchError((error) =>
+          print('Failed to add user firestore: $error'),
+      );
+
+      return (true);
+
+    } catch (e) {
+
+      return (false);
+    }
+
+
   }
 
   /////////// Check If Number Id Is Valid  //////////////
