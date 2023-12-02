@@ -68,7 +68,7 @@ class LocalStorage {
       final List<dynamic> list = jsonDecode(contents);
       final List<Meeting> res = [];
       for (var event in list) {
-        res.add(event);
+        res.add(Meeting.fromJson(event));
       }
       return res;
     } catch (e) {

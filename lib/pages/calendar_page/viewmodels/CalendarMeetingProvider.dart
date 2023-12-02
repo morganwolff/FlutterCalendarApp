@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/locals/local_storage.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../models/MeetingModel.dart';
@@ -157,10 +158,26 @@ class CalendarEventProvider with ChangeNotifier {
     );
   }
 
+  Future<bool> getMeetingFromLocalStorage() async {
+    if (_meetings.isEmpty) {
+      print("load");
+      final events = await LocalStorage.getAllEvents();
+      for (var calendar in events.entries) {
+        for (var meeting in calendar.value) {
+          _meetings.add(meeting);
+        }
+        break; //I only want to get the first calendar since multiple calendar is not yet implemented
+      }
+    }
+    return true;
+  }
+
   void addEventToMeetingList() {
+    const filename = "calendar1"; //to be changed in the future for multiple calendars
     final DateTime startTime = combineDateTimeAndTimeOfDay(_startDate, _startTime);
     final DateTime endTime = combineDateTimeAndTimeOfDay(_endDate, _endTime);
     meetingsList.add(Meeting(from: startTime, to: endTime, title: _title, background: _eventColor, isAllDay: _isAllDay));
+    LocalStorage.writeEventsToFile(meetingsList, filename);
     notifyListeners();
   }
 

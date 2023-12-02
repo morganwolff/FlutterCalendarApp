@@ -7,7 +7,7 @@ class MyCustomBottomSheet extends StatefulWidget {
   const MyCustomBottomSheet({super.key});
 
   @override
-  _MyCustomBottomSheetState createState() => _MyCustomBottomSheetState();
+  State<MyCustomBottomSheet> createState() => _MyCustomBottomSheetState();
 }
 
 class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
@@ -123,7 +123,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                 ],
               ),
             ),
-            SizedBox(height: 20,),
+            const SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.only(left: 50, right: 50),
               child: Column(
@@ -162,12 +162,12 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text('Choose Color'),
+                      const Text('Choose Color'),
                       ColoredBox(
                         color: provider.eventColor,
-                        child: SizedBox(height: 30, width: 30),
+                        child: const SizedBox(height: 30, width: 30),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.keyboard_arrow_right_rounded,
                         size: 40,
                         color: Colors.grey,

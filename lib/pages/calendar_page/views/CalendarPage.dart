@@ -10,13 +10,13 @@ class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
 
   @override
-  _CalendarPageState createState() => _CalendarPageState();
+  State<CalendarPage> createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late MeetingDataSource meetingDataSource;
-  CalendarController _controller = CalendarController();
+  final CalendarController _controller = CalendarController();
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class _CalendarPageState extends State<CalendarPage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               height: 100,
               child: DrawerHeader(
                 decoration: BoxDecoration(color: Colors.blue),
@@ -52,30 +52,30 @@ class _CalendarPageState extends State<CalendarPage> {
                     style: TextStyle(color: Colors.white, fontSize: 24)),
               ),
             ),
-            DrawerItemWidget(
+            const DrawerItemWidget(
                 icon: Icons.view_agenda_outlined,
                 text: 'Planning',
                 view: CalendarView.schedule,
                 index: 0),
-            DrawerItemWidget(
+            const DrawerItemWidget(
               icon: Icons.calendar_view_day_outlined,
               text: 'Day',
               view: CalendarView.day,
               index: 1,
             ),
-            DrawerItemWidget(
+            const DrawerItemWidget(
               icon: Icons.calendar_view_week_outlined,
               text: 'Week',
               view: CalendarView.week,
               index: 2,
             ),
-            DrawerItemWidget(
+            const DrawerItemWidget(
               icon: Icons.calendar_view_month_outlined,
               text: 'Month',
               view: CalendarView.month,
               index: 3,
             ),
-            Divider(),
+            const Divider(),
             SwitchListTile(
               title: const Text('Chung Ang'),
               value: provider.chungAngCalendar,
@@ -96,36 +96,47 @@ class _CalendarPageState extends State<CalendarPage> {
               },
               secondary: const Icon(Icons.person),
             ),
-            Divider(),
+            const Divider(),
           ],
         ),
       ),
-      body: SfCalendar(
-        key: ValueKey(provider.calendarView),
-        view: provider.calendarView,
-        firstDayOfWeek: 1,
-        dataSource: MeetingDataSource(provider.meetingsList),
-        monthViewSettings: const MonthViewSettings(
-            showAgenda: true,
-            agendaStyle: AgendaStyle(
-              backgroundColor: Colors.white60,
-              appointmentTextStyle: TextStyle(
-                  fontSize: 14,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.white),
-              dateTextStyle: TextStyle(
-                  fontStyle: FontStyle.normal,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.black),
-              dayTextStyle: TextStyle(
-                  fontStyle: FontStyle.normal,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black),
-            )
-        ),
-      ),
+      body: FutureBuilder<bool>(
+        future: provider.getMeetingFromLocalStorage(),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasData) {
+            return SfCalendar(
+              key: ValueKey(provider.calendarView),
+              view: provider.calendarView,
+              firstDayOfWeek: 1,
+              dataSource: MeetingDataSource(provider.meetingsList),
+              monthViewSettings: const MonthViewSettings(
+                  showAgenda: true,
+                  agendaStyle: AgendaStyle(
+                    backgroundColor: Colors.white60,
+                    appointmentTextStyle: TextStyle(
+                        fontSize: 14,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white),
+                    dateTextStyle: TextStyle(
+                        fontStyle: FontStyle.normal,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.black),
+                    dayTextStyle: TextStyle(
+                        fontStyle: FontStyle.normal,
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black),
+                  )
+              ),
+            );
+          } else {
+            return const Center(
+              child: Text("Fetching your meetings and events..."),
+            );
+          }
+        },
+      )
     );
   }
 
@@ -134,7 +145,7 @@ class _CalendarPageState extends State<CalendarPage> {
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return MyCustomBottomSheet();
+        return const MyCustomBottomSheet();
       },
     );
   }
