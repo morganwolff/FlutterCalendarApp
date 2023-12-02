@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/locals/local_storage.dart';
+import 'package:flutter_calendar_app/pages/to_do_list/models/to_do_list_model.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
 import '../models/MeetingModel.dart';
@@ -18,6 +19,7 @@ class CalendarEventProvider with ChangeNotifier {
   TimeOfDay _endTime = TimeOfDay(hour: TimeOfDay.now().hour + 2, minute: 0);
   Color _eventColor = Colors.blue;
   bool _isAllDay = false;
+  final List<ToDoListModel> _toDoLists = [];
 
   final List<Meeting> _meetings = <Meeting>[];
 
@@ -35,6 +37,7 @@ class CalendarEventProvider with ChangeNotifier {
   List<Meeting> get meetingsList => _meetings;
   bool get chungAngCalendar=> _chungAngCalendar;
   bool get personalCalendar => _personalCalendar;
+  List<ToDoListModel> get toDoLists => _toDoLists;
 
   // Setters
   void setCalendarView(CalendarView view) {
@@ -105,6 +108,7 @@ class CalendarEventProvider with ChangeNotifier {
     _endTime = TimeOfDay(hour: TimeOfDay.now().hour + 2, minute: 0);
     _eventColor = Colors.blue;
     _isAllDay = false;
+    _toDoLists.clear();
     notifyListeners();
   }
 
@@ -160,7 +164,6 @@ class CalendarEventProvider with ChangeNotifier {
 
   Future<bool> getMeetingFromLocalStorage() async {
     if (_meetings.isEmpty) {
-      print("load");
       final events = await LocalStorage.getAllEvents();
       for (var calendar in events.entries) {
         for (var meeting in calendar.value) {
@@ -176,12 +179,31 @@ class CalendarEventProvider with ChangeNotifier {
     const filename = "calendar1"; //to be changed in the future for multiple calendars
     final DateTime startTime = combineDateTimeAndTimeOfDay(_startDate, _startTime);
     final DateTime endTime = combineDateTimeAndTimeOfDay(_endDate, _endTime);
-    meetingsList.add(Meeting(from: startTime, to: endTime, title: _title, background: _eventColor, isAllDay: _isAllDay));
+    meetingsList.add(
+        Meeting(
+            from: startTime,
+            to: endTime,
+            title: _title,
+            background: _eventColor,
+            isAllDay: _isAllDay,
+            toDoLists: List.from(_toDoLists),
+        )
+    );
     LocalStorage.writeEventsToFile(meetingsList, filename);
     notifyListeners();
   }
 
   void removeEventToList(int index) {
     // TODO: Implement the function
+  }
+
+  void addToDoList(ToDoListModel list) {
+    _toDoLists.add(list);
+    notifyListeners();
+  }
+
+  void replaceToDoList(ToDoListModel list, int index) {
+    _toDoLists[index] = list;
+    notifyListeners();
   }
 }

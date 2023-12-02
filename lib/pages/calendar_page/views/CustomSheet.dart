@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/common/components/to_do_list/list_to_do_list.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -174,9 +175,10 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
+            const ListToDoList(),
           ],
         ),
       ),

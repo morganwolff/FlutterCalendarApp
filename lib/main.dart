@@ -5,9 +5,9 @@ import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
 import 'package:flutter_calendar_app/pages/test_directory_storage/views/test_directory_storage_page.dart';
+import 'package:flutter_calendar_app/pages/to_do_list/create_to_do_list/viewmodels/create_to_do_list_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_calendar_app/Pages/views/Login.dart';
-import 'package:flutter_calendar_app/pages/to_do_list/viewmodels/to_do_list_provider.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 
@@ -20,8 +20,8 @@ void main() {
   runApp(
       MultiProvider(
           providers: [
-            ChangeNotifierProvider(create: (_) => ToDoListProvider()),
             ChangeNotifierProvider(create: (_) => CalendarEventProvider()),
+            ChangeNotifierProvider(create: (_) => CreateToDoListProvider())
           ],
           child: const MyApp(),
       )

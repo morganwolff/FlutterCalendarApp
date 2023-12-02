@@ -87,6 +87,11 @@ class LocalStorage {
         res[filename] = await getEventsFromFile(file);
       }
     }
+    for (var tmp in res.entries) {
+      for(var meeting in tmp.value) {
+        print(meeting.toJson().toString());
+      }
+    }
     return res;
   }
 

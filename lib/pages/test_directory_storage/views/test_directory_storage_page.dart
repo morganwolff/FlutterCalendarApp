@@ -5,6 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/locals/cache.dart';
 import 'package:flutter_calendar_app/locals/local_storage.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/models/MeetingModel.dart';
+import 'package:flutter_calendar_app/pages/to_do_list/models/to_do_task.dart';
+
+import '../../to_do_list/models/to_do_list_model.dart';
 
 class TestDirectoryStorage extends StatefulWidget {
   const TestDirectoryStorage({super.key});
@@ -37,7 +40,13 @@ class _TestDirectoryStorageState extends State<TestDirectoryStorage> {
                       to: DateTime.now(),
                       title: "pixy",
                       background: Colors.blue,
-                      isAllDay: true)], "pixy1");
+                      isAllDay: true,
+                      toDoLists: [
+                        ToDoListModel(toDoList: [
+                          ToDoTask(task: "pixy", completed: false)
+                        ], name: "pixy")
+                      ],
+                  )], "pixy1");
                   setState(() {});
                 }, child: const Text("Add event")),
                 ElevatedButton(onPressed: () {

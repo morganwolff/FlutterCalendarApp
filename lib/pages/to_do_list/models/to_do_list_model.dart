@@ -7,12 +7,14 @@ class ToDoListModel {
 
   final List<ToDoTask> toDoList;
 
-  ToDoListModel.fromJson(Map<String, dynamic> json) :
-      name = json["name"],
-      toDoList = json["toDoList"];
+  ToDoListModel.fromJson(Map<String, dynamic> json)
+      : name = json["name"],
+        toDoList = (json["toDoList"] as List<dynamic>)
+            .map((task) => ToDoTask.fromJson(task))
+            .toList();
 
-  Map toJson() => {
+  Map<String, dynamic> toJson() => {
     "name": name,
-    "toDoList": toDoList
+    "toDoList": toDoList.map((task) => task.toJson()).toList(),
   };
 }

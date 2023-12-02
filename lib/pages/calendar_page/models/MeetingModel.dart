@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
+import '../../to_do_list/models/to_do_list_model.dart';
+
 class MeetingDataSource extends CalendarDataSource {
   MeetingDataSource(List<Meeting> source) {
     appointments = source;
@@ -43,33 +45,45 @@ class MeetingDataSource extends CalendarDataSource {
   }
 }
 
-
 class Meeting {
   DateTime from;
   DateTime to;
   String title;
   Color background;
   bool isAllDay;
+  List<ToDoListModel> toDoLists;
 
-  Meeting({
-    required this.from,
-    required this.to,
-    required this.title,
-    required this.background,
-    required this.isAllDay});
+  Meeting(
+      {required this.from,
+      required this.to,
+      required this.title,
+      required this.background,
+      required this.isAllDay,
+      required this.toDoLists});
 
-  Meeting.fromJson(Map<String, dynamic> json):
-      from = DateTime.parse(json["from"]),
-      to = DateTime.parse(json["to"]),
-      title = json["title"],
-      background = Color(json["background"]),
-      isAllDay = json["isAllDay"];
+  Meeting.fromJson(Map<String, dynamic> json)
+      : from = DateTime.parse(json["from"]),
+        to = DateTime.parse(json["to"]),
+        title = json["title"],
+        background = Color(json["background"]),
+        isAllDay = json["isAllDay"],
+        toDoLists = (json["toDoLists"] as List<dynamic>)
+            .map((task) => ToDoListModel.fromJson(task))
+            .toList();
 
-  Map toJson() => {
-    "from": from.toIso8601String(),
-    "to": to.toIso8601String(),
-    "title": title,
-    "background": background.value,
-    "isAllDay": isAllDay
-  };
+  Map toJson() {
+    List<Map> list = [];
+
+    for (var task in toDoLists) {
+      list.add(task.toJson());
+    }
+    return {
+      "from": from.toIso8601String(),
+      "to": to.toIso8601String(),
+      "title": title,
+      "background": background.value,
+      "isAllDay": isAllDay,
+      "toDoLists": list,
+    };
+  }
 }
