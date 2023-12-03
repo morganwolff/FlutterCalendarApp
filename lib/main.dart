@@ -80,15 +80,17 @@ class _MyAppState extends State<MyApp> {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: StreamBuilder(
+      home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
+
           if (snapshot.hasData) {
             return const  MyHomePage();
           }
           else {
             return const LoginPage();
           }
+
         },
       ),
     );
@@ -104,37 +106,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  final _authentication = FirebaseAuth.instance;
-  var _username = "";
-  User? loggedUser;
-
-  @override
-
-  void initState() {
-    super.initState();
-
-    FirebaseFirestore.instance.settings = Settings(
-      persistenceEnabled: true,
-      cacheSizeBytes: Settings.CACHE_SIZE_UNLIMITED,
-    );
-
-    getCurrentUser();
-  }
-
-  void getCurrentUser() {
-    try {
-      final user = _authentication.currentUser;
-      if (user != null) {
-        loggedUser = user;
-      }
-    } catch (e) {
-      print (e);
-    }
-
-  }
-
-
 
   int _counter = 0;
 

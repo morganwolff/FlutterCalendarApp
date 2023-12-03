@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
+import 'package:flutter_calendar_app/main.dart';
 import '../viewmodels/LoginVewModel.dart';
 import '../models/UserInformationModel.dart';
 import '../../subscribe_page/views/Subscribe.dart';
@@ -117,6 +118,8 @@ class _LoginPage extends State<LoginPage> {
 
                       try {
 
+
+
                         // This function fill _userInfos.get_username() / _userInfos.get_student_id() / _userInfos.get_planningWeekCau()
                         if (await _userInfos.get_user_data_firebase(_userInfos.get_emailController().text)) {
 
@@ -134,7 +137,6 @@ class _LoginPage extends State<LoginPage> {
                                   .text, password: _userInfos
                               .get_passwordController()
                               .text);
-
 
                           if (currentUser.user != null) {
                             _formKey.currentState!.reset();

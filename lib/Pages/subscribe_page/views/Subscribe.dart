@@ -3,10 +3,13 @@ import 'package:flutter_calendar_app/Pages/subscribe_page/viewmodels/SubscribeVi
 import 'package:flutter_calendar_app/Pages/login_page/views/Login.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import '../../login_page/models/UserInformationModel.dart';
+import '../../login_page/viewmodels/LoginVewModel.dart';
+import 'package:provider/provider.dart';
+
 
 class SubscribePage extends StatefulWidget {
   const SubscribePage({super.key});
-
 
   @override
   State<SubscribePage> createState() => _SubscribePage();
@@ -15,6 +18,7 @@ class SubscribePage extends StatefulWidget {
 class _SubscribePage extends State<SubscribePage> {
 
   subscribeViewModel _subscribeInfos = new subscribeViewModel();
+  UserInfosViewModel _userInfos = new UserInfosViewModel();
 
   var error = false;
   var ErrorMsg = "";
@@ -23,6 +27,8 @@ class _SubscribePage extends State<SubscribePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    final _userInfosProvider = Provider.of<UserInformationModel>(context, listen: false);
 
     return Scaffold(
 
@@ -136,13 +142,20 @@ class _SubscribePage extends State<SubscribePage> {
                       if (await _subscribeInfos.insertDataFireStore(_subscribeInfos.get_emailController().text, _subscribeInfos.get_studentIdNumberController().text,_subscribeInfos.get_usernameController().text)) {
                         if (_newUser.user != null) {
                           _formKey.currentState!.reset();
+                          if (!mounted) return;
 
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => LoginPage(),
-                            ),
-                          );
+                        if (await _userInfos.get_user_data_firebase(_subscribeInfos.get_emailController().text)) {
+                          _userInfosProvider.set_username(
+                              _userInfos.get_username());
+                          _userInfosProvider.set_student_id(
+                              _userInfos.get_student_id());
+                          _userInfosProvider.set_planningCau(
+                              _userInfos.get_planningWeekCau());
+
+                          Navigator.popUntil(context, (route) => route.isFirst);
+                        }
+
+
                         }
                       }
                     } catch(e) {
