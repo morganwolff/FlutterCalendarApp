@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_app/Pages/viewmodels/SubscribeViewModel.dart';
-import 'package:flutter_calendar_app/Pages/views/Login.dart';
+import 'package:flutter_calendar_app/Pages/subscribe_page/viewmodels/SubscribeViewModel.dart';
+import 'package:flutter_calendar_app/Pages/login_page/views/Login.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
 import '../viewmodels/LoginVewModel.dart';
 import '../models/UserInformationModel.dart';
-import '../views/Subscribe.dart';
+import '../../subscribe_page/views/Subscribe.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {

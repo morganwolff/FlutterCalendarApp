@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_app/Pages/models/SubscribeModel.dart';
+import 'package:flutter_calendar_app/Pages/subscribe_page/models/SubscribeModel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
