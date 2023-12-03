@@ -167,6 +167,7 @@ class CalendarEventProvider with ChangeNotifier {
       final events = await LocalStorage.getAllEvents();
       for (var calendar in events.entries) {
         for (var meeting in calendar.value) {
+          print(meeting.toJson().toString());
           _meetings.add(meeting);
         }
         break; //I only want to get the first calendar since multiple calendar is not yet implemented
@@ -205,5 +206,10 @@ class CalendarEventProvider with ChangeNotifier {
   void replaceToDoList(ToDoListModel list, int index) {
     _toDoLists[index] = list;
     notifyListeners();
+  }
+
+  void changeBoolOfTask(int indexMeeting, int indexToDoList, int indexTask, bool value) {
+      _meetings[indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].completed = value;
+      notifyListeners();
   }
 }

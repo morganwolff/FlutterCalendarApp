@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/pages/to_do_list/to_do_list_module/views/to_do_list_module.dart';
 import '../../pages/calendar_page/views/CalendarPage.dart';
 import '../../pages/settings_page/views/SettingsPage.dart';
 
@@ -11,7 +12,7 @@ class TabBarPage extends StatefulWidget {
 
 class _TabBarPageState extends State<TabBarPage> {
   int _currentIndex = 0;
-  final List<Widget> _pages = [CalendarPage(), SettingsPage()];
+  final List<Widget> _pages = [CalendarPage(), AllToDoLists(index: 0)];
 
   void _onItemTapped(int index) {
     setState(() {
