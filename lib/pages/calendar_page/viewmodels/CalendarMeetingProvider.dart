@@ -210,6 +210,23 @@ class CalendarEventProvider with ChangeNotifier {
 
   void changeBoolOfTask(int indexMeeting, int indexToDoList, int indexTask, bool value) {
       _meetings[indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].completed = value;
+      const filename = "calendar1"; //to be changed in the future for multiple calendars
+      LocalStorage.writeEventsToFile(meetingsList, filename);
       notifyListeners();
+  }
+
+  void changeNameOfTask(int indexMeeting, int indexToDoList, int indexTask, String value) {
+    _meetings[indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].task = value;
+    notifyListeners();
+  }
+
+  void changeTitleOfToDoList(int indexMeeting, int indexToDoList, String value) {
+    _meetings[indexMeeting].toDoLists[indexToDoList].name = value;
+    notifyListeners();
+  }
+
+  void saveMeetings() {
+    const filename = "calendar1"; //to be changed in the future for multiple calendars
+    LocalStorage.writeEventsToFile(meetingsList, filename);
   }
 }

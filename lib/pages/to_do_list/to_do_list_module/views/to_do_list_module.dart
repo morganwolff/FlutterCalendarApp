@@ -5,8 +5,54 @@ import 'package:provider/provider.dart';
 
 import '../../../../locals/local_storage.dart';
 
+class FieldModifyTask extends StatefulWidget {
+  const FieldModifyTask(
+      {super.key,
+      required this.index,
+      required this.indexToDoList,
+      required this.indexMeeting});
+
+  final int indexMeeting;
+
+  final int indexToDoList;
+
+  final int index;
+
+  @override
+  State<FieldModifyTask> createState() => _FieldModifyTaskState();
+}
+
+class _FieldModifyTaskState extends State<FieldModifyTask> {
+  @override
+  Widget build(BuildContext context) {
+    var provider = Provider.of<CalendarEventProvider>(context);
+    return Column(
+      children: [
+        const SizedBox(
+          height: 25,
+        ),
+        TextFormField(
+            initialValue: provider.meetingsList[widget.indexMeeting]
+                .toDoLists[widget.indexToDoList].toDoList[widget.index].task,
+            decoration: InputDecoration(
+              labelText: 'Task ${widget.index + 1}',
+              border: const OutlineInputBorder(),
+            ),
+            onChanged: (value) {
+              provider.changeNameOfTask(widget.indexMeeting,
+                  widget.indexToDoList, widget.index, value);
+            }),
+      ],
+    );
+  }
+}
+
 class ListTask extends StatefulWidget {
-  const ListTask({super.key, required this.index, required this.indexToDoList, required this.indexMeeting});
+  const ListTask(
+      {super.key,
+      required this.index,
+      required this.indexToDoList,
+      required this.indexMeeting});
 
   final int indexMeeting;
 
@@ -25,15 +71,38 @@ class _ListTaskState extends State<ListTask> {
     return (Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Checkbox(value: provider.meetingsList[widget.indexMeeting]
-            .toDoLists[widget.indexToDoList].toDoList[widget.index].completed, onChanged: (value) {
-          provider.changeBoolOfTask(widget.indexMeeting, widget.indexToDoList, widget.index, value!);
-        }),
+        Checkbox(
+            value: provider
+                .meetingsList[widget.indexMeeting]
+                .toDoLists[widget.indexToDoList]
+                .toDoList[widget.index]
+                .completed,
+            onChanged: (value) {
+              provider.changeBoolOfTask(widget.indexMeeting,
+                  widget.indexToDoList, widget.index, value!);
+            }),
         const SizedBox(
           width: 10,
         ),
-        Text(provider.meetingsList[widget.indexMeeting]
-            .toDoLists[widget.indexToDoList].toDoList[widget.index].task),
+        if (provider
+                .meetingsList[widget.indexMeeting]
+                .toDoLists[widget.indexToDoList]
+                .toDoList[widget.index]
+                .completed ==
+            false)
+          Text(provider.meetingsList[widget.indexMeeting]
+              .toDoLists[widget.indexToDoList].toDoList[widget.index].task),
+        if (provider
+                .meetingsList[widget.indexMeeting]
+                .toDoLists[widget.indexToDoList]
+                .toDoList[widget.index]
+                .completed ==
+            true)
+          Text(
+            provider.meetingsList[widget.indexMeeting]
+                .toDoLists[widget.indexToDoList].toDoList[widget.index].task,
+            style: const TextStyle(decoration: TextDecoration.lineThrough),
+          ),
       ],
     ));
   }
@@ -52,27 +121,34 @@ class _AllToDoListsState extends State<AllToDoLists> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<CalendarEventProvider>(context);
-    return Padding(
-      padding: const EdgeInsets.all(25.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-              onPressed: () {
-                LocalStorage.deleteLocalFile(
-                    "calendar1${LocalStorage.eventExtension}");
-              },
-              child: const Text("Remove event")),
-          for (int i = 0;
-              i < provider.meetingsList[widget.index].toDoLists.length;
-              i++)
-            ToDoListModule(
-              indexMeeting: widget.index,
-              indexToDoList: i,
+    return Material(
+        color: Colors.transparent,
+        child: Container(
+          color: Colors.transparent,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(25.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                      onPressed: () {
+                        LocalStorage.deleteLocalFile(
+                            "calendar1${LocalStorage.eventExtension}");
+                      },
+                      child: const Text("Remove event")),
+                  for (int i = 0;
+                      i < provider.meetingsList[widget.index].toDoLists.length;
+                      i++)
+                    ToDoListModule(
+                      indexMeeting: widget.index,
+                      indexToDoList: i,
+                    ),
+                ],
+              ),
             ),
-        ],
-      ),
-    );
+          ),
+        ));
   }
 }
 
@@ -89,6 +165,8 @@ class ToDoListModule extends StatefulWidget {
 }
 
 class _ToDoListModuleState extends State<ToDoListModule> {
+  bool modify = false;
+
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<CalendarEventProvider>(context);
@@ -98,9 +176,39 @@ class _ToDoListModuleState extends State<ToDoListModule> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(provider.meetingsList[widget.indexMeeting]
-                .toDoLists[widget.indexToDoList].name),
-            IconButton(onPressed: () {}, icon: const Icon(Icons.edit)),
+            modify
+                ? SizedBox(
+                    width: 250,
+                    child: TextFormField(
+                        initialValue: provider.meetingsList[widget.indexMeeting]
+                            .toDoLists[widget.indexToDoList].name,
+                        decoration: const InputDecoration(
+                          labelText: 'Titre',
+                          border: OutlineInputBorder(),
+                        ),
+                        onChanged: (value) {
+                          provider.changeTitleOfToDoList(
+                              widget.indexMeeting, widget.indexToDoList, value);
+                        }),
+                  )
+                : Text(provider.meetingsList[widget.indexMeeting]
+                    .toDoLists[widget.indexToDoList].name),
+            !modify
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        modify = true;
+                      });
+                    },
+                    icon: const Icon(Icons.edit))
+                : TextButton(
+                    onPressed: () {
+                      provider.saveMeetings();
+                      setState(() {
+                        modify = false;
+                      });
+                    },
+                    child: const Text("Save")),
           ],
         ),
         for (int i = 0;
@@ -108,7 +216,16 @@ class _ToDoListModuleState extends State<ToDoListModule> {
                 provider.meetingsList[widget.indexMeeting]
                     .toDoLists[widget.indexToDoList].toDoList.length;
             i++)
-          ListTask(indexToDoList: widget.indexToDoList, indexMeeting: widget.indexMeeting, index: i,),
+          !modify
+              ? ListTask(
+                  indexToDoList: widget.indexToDoList,
+                  indexMeeting: widget.indexMeeting,
+                  index: i,
+                )
+              : FieldModifyTask(
+                  index: i,
+                  indexToDoList: widget.indexToDoList,
+                  indexMeeting: widget.indexMeeting),
       ],
     );
   }
