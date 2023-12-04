@@ -25,8 +25,6 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
     {"color": Colors.blue, "name": "Couleur par défaut"},
   ];
 
-
-
   @override
   Widget build(BuildContext context) {
     double bottomSheetHeight = MediaQuery.of(context).size.height * 0.8;
@@ -84,6 +82,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                   setState(() => provider.setDescription(value)),
             ),
             const SizedBox(height: 20),
+            Divider(),
             SwitchListTile(
               title: const Text('All day event'),
               value: provider.isAllDay,
@@ -108,7 +107,8 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                     ),
                     child: Row(children: [
                       const SizedBox(width: 10),
-                      Text(formatDateTime(provider.combineDateTimeAndTimeOfDay(provider.startDate, provider.startTime))),
+                      Text(formatDateTime(provider.combineDateTimeAndTimeOfDay(
+                          provider.startDate, provider.startTime))),
                       const SizedBox(width: 20),
                       IconButton(
                         icon: const Icon(Icons.calendar_month),
@@ -123,7 +123,9 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                 ],
               ),
             ),
-            SizedBox(height: 20,),
+            SizedBox(
+              height: 20,
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 50, right: 50),
               child: Column(
@@ -155,6 +157,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               ),
             ),
             const SizedBox(height: 20),
+            Divider(),
             Column(
               children: <Widget>[
                 InkWell(
@@ -167,7 +170,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                         color: provider.eventColor,
                         child: SizedBox(height: 30, width: 30),
                       ),
-                      Icon(
+                      const Icon(
                         Icons.keyboard_arrow_right_rounded,
                         size: 40,
                         color: Colors.grey,
@@ -177,9 +180,78 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                 )
               ],
             ),
+            Divider(),
+            GestureDetector(
+              onTap: () => _showCalendarChoices(context),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  const Text('Add to calendar'),
+                  Text(provider.chungAngCalendar ? "Chung Ang" : "Personal",
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  void _showCalendarChoices(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        var provider = Provider.of<CalendarEventProvider>(context);
+        String selectedCalendar = provider.chungAngCalendar
+            ? "Chung Ang"
+            : (provider.personalCalendar ? "Personal" : "");
+
+        return AlertDialog(
+          title: const Text('Choose where you want to add your new event.'),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                CheckboxListTile(
+                  title: const Text("Chung Ang"),
+                  value: selectedCalendar == "Chung Ang",
+                  onChanged: (bool? value) {
+                    if (value == true) {
+                      setState(() {
+                        selectedCalendar = "Chung Ang";
+                        provider.setChungAngCalendar(true);
+                        provider.setPersonalCalendar(false);
+                      });
+                    }
+                  },
+                ),
+                CheckboxListTile(
+                  title: const Text("Personal"),
+                  value: selectedCalendar == "Personal",
+                  onChanged: (bool? value) {
+                    if (value == true) {
+                      setState(() {
+                        selectedCalendar = "Personal";
+                        provider.setPersonalCalendar(true);
+                        provider.setChungAngCalendar(false);
+                      });
+                    }
+                  },
+                ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Confirm'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 

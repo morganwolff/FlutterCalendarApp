@@ -6,6 +6,8 @@ import '../models/MeetingModel.dart';
 class CalendarEventProvider with ChangeNotifier {
   CalendarView _calendarView = CalendarView.week;
   int _selectedDrawerIndex = 2;
+  bool _isChungAngCalendarView = true;
+  bool _isPersonalCalendarView = true;
   bool _chungAngCalendar = false;
   bool _personalCalendar = true;
 
@@ -18,10 +20,15 @@ class CalendarEventProvider with ChangeNotifier {
   Color _eventColor = Colors.blue;
   bool _isAllDay = false;
 
-  List<Meeting> _meetings = <Meeting>[];
+  Map<String, List<Meeting>> _meetingsMap = {
+    "chungang": [],
+    "personal": [],
+    "both": []
+  };
+
+  String _selectedCalendar = "personal";
 
   // Getters
-  CalendarView get calendarView => _calendarView;
   String get title => _title;
   String get description => _description;
   DateTime get startDate => _startDate;
@@ -29,11 +36,17 @@ class CalendarEventProvider with ChangeNotifier {
   TimeOfDay get startTime => _startTime;
   TimeOfDay get endTime => _endTime;
   Color get eventColor => _eventColor;
-  int get selectedDrawerIndex => _selectedDrawerIndex;
   bool get isAllDay => _isAllDay;
-  List<Meeting> get meetingsList => _meetings;
-  bool get chungAngCalendar=> _chungAngCalendar;
+  bool get chungAngCalendar => _chungAngCalendar;
   bool get personalCalendar => _personalCalendar;
+
+  CalendarView get calendarView => _calendarView;
+  int get selectedDrawerIndex => _selectedDrawerIndex;
+  bool get isChungAngCalendarView=> _isChungAngCalendarView;
+  bool get isPersonalCalendarView => _isPersonalCalendarView;
+
+  Map<String, List<Meeting>> get meetingsMap => _meetingsMap;
+  String get selectedCalendar => _selectedCalendar;
 
   // Setters
   void setCalendarView(CalendarView view) {
@@ -86,12 +99,26 @@ class CalendarEventProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setChungAngCalendarView(bool value) {
+    _isChungAngCalendarView = value;
+    notifyListeners();
+  }
+  void setPersonalCalendarView(bool value) {
+    _isPersonalCalendarView = value;
+    notifyListeners();
+  }
+
   void setChungAngCalendar(bool value) {
     _chungAngCalendar = value;
     notifyListeners();
   }
   void setPersonalCalendar(bool value) {
     _personalCalendar = value;
+    notifyListeners();
+  }
+
+  void setSelectedCalendar(String value) {
+    _selectedCalendar = value;
     notifyListeners();
   }
 
@@ -157,14 +184,51 @@ class CalendarEventProvider with ChangeNotifier {
     );
   }
 
+  void updateSelectedCalendar() {
+    if (_isChungAngCalendarView && !_isPersonalCalendarView) {
+      _selectedCalendar = "chungang";
+    } else if (!_isChungAngCalendarView && _isPersonalCalendarView) {
+      _selectedCalendar = "personal";
+    } else {
+      _selectedCalendar = "both";
+    }
+    notifyListeners();
+  }
+
   void addEventToMeetingList() {
     final DateTime startTime = combineDateTimeAndTimeOfDay(_startDate, _startTime);
     final DateTime endTime = combineDateTimeAndTimeOfDay(_endDate, _endTime);
-    meetingsList.add(Meeting(from: startTime, to: endTime, title: _title, background: _eventColor, isAllDay: _isAllDay));
+
+
+    Meeting newMeeting = Meeting(
+        from: startTime,
+        to: endTime,
+        title: _title,
+        background: _eventColor,
+        isAllDay: _isAllDay
+    );
+
+    String mapKey = "";
+    if (chungAngCalendar) {
+      mapKey = "chungang";
+    } else if (personalCalendar) {
+      mapKey = "personal";
+    }
+
+    if (mapKey.isNotEmpty) {
+      if (_meetingsMap.containsKey(mapKey)) {
+        _meetingsMap[mapKey]!.add(newMeeting);
+        _meetingsMap["both"]!.add(newMeeting);
+      } else {
+        return;
+      }
+      notifyListeners();
+    }
     notifyListeners();
   }
 
   void removeEventToList(int index) {
     // TODO: Implement the function
   }
+
 }

@@ -1,12 +1,8 @@
-
 import 'dart:convert';
-
 import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_calendar/calendar.dart';
-import 'package:flutter_calendar_app/Pages/views/Login.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'locals/app_locale.dart';
 import 'locals/local_storage.dart';
@@ -64,6 +60,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Calendar App',
+      debugShowCheckedModeBanner: false,
       locale: const Locale('en', 'US'),
       supportedLocales: _localization.supportedLocales,
       localizationsDelegates: _localization.localizationsDelegates,
