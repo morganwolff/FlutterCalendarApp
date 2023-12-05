@@ -16,14 +16,14 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
 
   final List<Map<String, dynamic>> colorOptions = [
     {"color": Colors.deepPurpleAccent, "name": "Purple"},
-    {"color": Colors.pinkAccent, "name": "Rose"},
-    {"color": Colors.red, "name": "Rouge"},
+    {"color": Colors.pinkAccent, "name": "Pink"},
+    {"color": Colors.red, "name": "Red"},
     {"color": Colors.orange, "name": "Orange"},
-    {"color": Colors.yellowAccent, "name": "Jaune"},
-    {"color": Colors.greenAccent, "name": "Vert clair"},
-    {"color": Colors.green, "name": "Vert"},
-    {"color": Colors.blueGrey, "name": "Gris"},
-    {"color": Colors.blue, "name": "Couleur par défaut"},
+    {"color": Colors.yellowAccent, "name": "Yellow"},
+    {"color": Colors.greenAccent, "name": "Light Green"},
+    {"color": Colors.green, "name": "Green"},
+    {"color": Colors.blueGrey, "name": "Gray"},
+    {"color": Colors.blue, "name": "Default Color"},
   ];
 
   @override

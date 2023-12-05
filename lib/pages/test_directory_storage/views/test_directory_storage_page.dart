@@ -35,18 +35,6 @@ class _TestDirectoryStorageState extends State<TestDirectoryStorage> {
             return Column(
               children: [
                 ElevatedButton(onPressed: () {
-                  LocalStorage.writeEventsToFile([Meeting(
-                      from: DateTime.now(),
-                      to: DateTime.now(),
-                      title: "pixy",
-                      background: Colors.blue,
-                      isAllDay: true,
-                      toDoLists: [
-                        ToDoListModel(toDoList: [
-                          ToDoTask(task: "pixy", completed: false)
-                        ], name: "pixy")
-                      ],
-                  )], "pixy1");
                   setState(() {});
                 }, child: const Text("Add event")),
                 ElevatedButton(onPressed: () {

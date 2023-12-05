@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/locals/local_storage.dart';
 import 'package:flutter_calendar_app/pages/to_do_list/models/to_do_list_model.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-
+import 'package:uuid/uuid.dart';
 import '../models/MeetingModel.dart';
 
 class CalendarEventProvider with ChangeNotifier {
@@ -51,6 +51,16 @@ class CalendarEventProvider with ChangeNotifier {
 
   Map<String, List<Meeting>> get meetingsMap => _meetingsMap;
   String get selectedCalendar => _selectedCalendar;
+
+  int _calendarKeyID = 0;
+
+  void forceRebuildCalendar() {
+    _calendarKeyID++;
+    notifyListeners();
+  }
+
+  int get calendarKeyID => _calendarKeyID;
+
 
   // Setters
   void setCalendarView(CalendarView view) {
@@ -224,7 +234,14 @@ class CalendarEventProvider with ChangeNotifier {
   void addEventToMeetingList() {
     final DateTime startTime = combineDateTimeAndTimeOfDay(_startDate, _startTime);
     final DateTime endTime = combineDateTimeAndTimeOfDay(_endDate, _endTime);
+    var uuid = Uuid();
 
+    if (_title.isEmpty) {
+      _title = "No title";
+    }
+    if (_description.isEmpty) {
+      _description = "No description";
+    }
 
     Meeting newMeeting = Meeting(
         from: startTime,
@@ -233,12 +250,14 @@ class CalendarEventProvider with ChangeNotifier {
         background: _eventColor,
         isAllDay: _isAllDay,
         toDoLists: List.from(_toDoLists),
+        description: _description,
+        uuid: uuid.v4().toString(),
     );
 
     String mapKey = "";
-    if (chungAngCalendar) {
+    if (_chungAngCalendar) {
       mapKey = "chungang";
-    } else if (personalCalendar) {
+    } else if (_personalCalendar) {
       mapKey = "personal";
     }
 
@@ -272,7 +291,6 @@ class CalendarEventProvider with ChangeNotifier {
 
   void changeBoolOfTask(int indexMeeting, int indexToDoList, int indexTask, bool value) {
       _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].completed = value;
-      const filename = "calendar1"; //to be changed in the future for multiple calendars
       LocalStorage.writeEventsToFile(_meetingsMap[_selectedCalendar]!, _selectedCalendar);
       notifyListeners();
   }

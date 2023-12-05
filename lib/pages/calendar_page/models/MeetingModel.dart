@@ -51,6 +51,8 @@ class Meeting {
   String title;
   Color background;
   bool isAllDay;
+  String description;
+  String uuid;
   List<ToDoListModel> toDoLists;
 
   Meeting(
@@ -59,6 +61,8 @@ class Meeting {
       required this.title,
       required this.background,
       required this.isAllDay,
+      required this.description,
+      required this.uuid,
       required this.toDoLists});
 
   Meeting.fromJson(Map<String, dynamic> json)
@@ -69,7 +73,9 @@ class Meeting {
         isAllDay = json["isAllDay"],
         toDoLists = (json["toDoLists"] as List<dynamic>)
             .map((task) => ToDoListModel.fromJson(task))
-            .toList();
+            .toList(),
+        uuid = json["uuid"],
+        description = json["description"];
 
   Map toJson() {
     List<Map> list = [];
@@ -84,6 +90,8 @@ class Meeting {
       "background": background.value,
       "isAllDay": isAllDay,
       "toDoLists": list,
+      "uuid": uuid,
+      "description": description
     };
   }
 }
