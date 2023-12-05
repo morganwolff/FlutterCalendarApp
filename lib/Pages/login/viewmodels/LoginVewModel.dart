@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_app/Pages/models/LoginModel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+
+import '../models/LoginModel.dart';
 
 class UserInfosViewModel {
 

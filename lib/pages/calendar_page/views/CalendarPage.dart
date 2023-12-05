@@ -52,51 +52,36 @@ class _CalendarPageState extends State<CalendarPage> {
                     style: TextStyle(color: Colors.white, fontSize: 24)),
               ),
             ),
-            const DrawerItemWidget(
-                icon: Icons.view_agenda_outlined,
-                text: 'Planning',
-                view: CalendarView.schedule,
-                index: 0),
-            const DrawerItemWidget(
-              icon: Icons.calendar_view_day_outlined,
-              text: 'Day',
-              view: CalendarView.day,
-              index: 1,
-            ),
-            const DrawerItemWidget(
-              icon: Icons.calendar_view_week_outlined,
-              text: 'Week',
-              view: CalendarView.week,
-              index: 2,
-            ),
-            const DrawerItemWidget(
-              icon: Icons.calendar_view_month_outlined,
-              text: 'Month',
-              view: CalendarView.month,
-              index: 3,
-            ),
-            const Divider(),
-            SwitchListTile(
-              title: const Text('Chung Ang'),
-              value: provider.chungAngCalendar,
-              onChanged: (bool value) {
-                setState(() {
-                  provider.setChungAngCalendar(value);
-                });
-              },
-              secondary: const Icon(Icons.school),
-            ),
-            SwitchListTile(
-              title: const Text('Personal'),
-              value: provider.personalCalendar,
-              onChanged: (bool value) {
-                setState(() {
-                  provider.setPersonalCalendar(value);
-                });
-              },
-              secondary: const Icon(Icons.person),
-            ),
-            const Divider(),
+            DrawerItemWidget(icon: Icons.view_agenda_outlined, text: 'Planning', view: CalendarView.schedule, index: 0),
+            DrawerItemWidget(icon: Icons.calendar_view_day_outlined, text: 'Day', view: CalendarView.day, index: 1,),
+            DrawerItemWidget(icon: Icons.calendar_view_week_outlined, text: 'Week', view: CalendarView.week, index: 2,),
+            DrawerItemWidget(icon: Icons.calendar_view_month_outlined, text: 'Month', view: CalendarView.month, index: 3,),
+            Divider(),
+          SwitchListTile(
+            title: const Text('Chung Ang'),
+            value: provider.isChungAngCalendarView,
+            onChanged: (bool value) {
+              setState(() {
+                if (!value && !provider.isPersonalCalendarView) { return; }
+                provider.setChungAngCalendarView(value);
+                provider.updateSelectedCalendar();
+              });
+            },
+            secondary: const Icon(Icons.school),
+          ),
+          SwitchListTile(
+            title: const Text('Personal'),
+            value: provider.isPersonalCalendarView,
+            onChanged: (bool value) {
+              setState(() {
+                if (!value && !provider.isChungAngCalendarView) { return; }
+                provider.setPersonalCalendarView(value);
+                provider.updateSelectedCalendar();
+              });
+            },
+            secondary: const Icon(Icons.person),
+          ),
+            Divider(),
           ],
         ),
       ),
@@ -108,9 +93,10 @@ class _CalendarPageState extends State<CalendarPage> {
               key: ValueKey(provider.calendarView),
               view: provider.calendarView,
               firstDayOfWeek: 1,
-              dataSource: MeetingDataSource(provider.meetingsList),
+              dataSource: MeetingDataSource(provider.meetingsMap[provider.selectedCalendar]!),
               monthViewSettings: const MonthViewSettings(
                   showAgenda: true,
+                  appointmentDisplayCount: 6,
                   agendaStyle: AgendaStyle(
                     backgroundColor: Colors.white60,
                     appointmentTextStyle: TextStyle(
@@ -130,7 +116,8 @@ class _CalendarPageState extends State<CalendarPage> {
                   )
               ),
             );
-          } else {
+          }
+          else {
             return const Center(
               child: Text("Fetching your meetings and events..."),
             );
@@ -149,6 +136,7 @@ class _CalendarPageState extends State<CalendarPage> {
       },
     );
   }
+
 }
 
 class DrawerItemWidget extends StatefulWidget {

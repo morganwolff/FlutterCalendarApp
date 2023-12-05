@@ -32,7 +32,7 @@ class _FieldModifyTaskState extends State<FieldModifyTask> {
           height: 25,
         ),
         TextFormField(
-            initialValue: provider.meetingsList[widget.indexMeeting]
+            initialValue: provider.meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
                 .toDoLists[widget.indexToDoList].toDoList[widget.index].task,
             decoration: InputDecoration(
               labelText: 'Task ${widget.index + 1}',
@@ -73,7 +73,7 @@ class _ListTaskState extends State<ListTask> {
       children: [
         Checkbox(
             value: provider
-                .meetingsList[widget.indexMeeting]
+                .meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
                 .toDoLists[widget.indexToDoList]
                 .toDoList[widget.index]
                 .completed,
@@ -85,21 +85,21 @@ class _ListTaskState extends State<ListTask> {
           width: 10,
         ),
         if (provider
-                .meetingsList[widget.indexMeeting]
+                .meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
                 .toDoLists[widget.indexToDoList]
                 .toDoList[widget.index]
                 .completed ==
             false)
-          Text(provider.meetingsList[widget.indexMeeting]
+          Text(provider.meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
               .toDoLists[widget.indexToDoList].toDoList[widget.index].task),
         if (provider
-                .meetingsList[widget.indexMeeting]
+                .meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
                 .toDoLists[widget.indexToDoList]
                 .toDoList[widget.index]
                 .completed ==
             true)
           Text(
-            provider.meetingsList[widget.indexMeeting]
+            provider.meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
                 .toDoLists[widget.indexToDoList].toDoList[widget.index].task,
             style: const TextStyle(decoration: TextDecoration.lineThrough),
           ),
@@ -121,6 +121,7 @@ class _AllToDoListsState extends State<AllToDoLists> {
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<CalendarEventProvider>(context);
+    print(provider.meetingsMap[provider.selectedCalendar]![widget.index].toJson().toString());
     return Material(
         color: Colors.transparent,
         child: Container(
@@ -134,11 +135,15 @@ class _AllToDoListsState extends State<AllToDoLists> {
                   ElevatedButton(
                       onPressed: () {
                         LocalStorage.deleteLocalFile(
-                            "calendar1${LocalStorage.eventExtension}");
+                            "personal${LocalStorage.eventExtension}");
+                        LocalStorage.deleteLocalFile(
+                            "chungang${LocalStorage.eventExtension}");
+                        LocalStorage.deleteLocalFile(
+                            "both${LocalStorage.eventExtension}");
                       },
                       child: const Text("Remove event")),
                   for (int i = 0;
-                      i < provider.meetingsList[widget.index].toDoLists.length;
+                      i < provider.meetingsMap[provider.selectedCalendar]![widget.index].toDoLists.length;
                       i++)
                     ToDoListModule(
                       indexMeeting: widget.index,
@@ -180,7 +185,7 @@ class _ToDoListModuleState extends State<ToDoListModule> {
                 ? SizedBox(
                     width: 250,
                     child: TextFormField(
-                        initialValue: provider.meetingsList[widget.indexMeeting]
+                        initialValue: provider.meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
                             .toDoLists[widget.indexToDoList].name,
                         decoration: const InputDecoration(
                           labelText: 'Titre',
@@ -191,7 +196,7 @@ class _ToDoListModuleState extends State<ToDoListModule> {
                               widget.indexMeeting, widget.indexToDoList, value);
                         }),
                   )
-                : Text(provider.meetingsList[widget.indexMeeting]
+                : Text(provider.meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
                     .toDoLists[widget.indexToDoList].name),
             !modify
                 ? IconButton(
@@ -213,7 +218,7 @@ class _ToDoListModuleState extends State<ToDoListModule> {
         ),
         for (int i = 0;
             i <
-                provider.meetingsList[widget.indexMeeting]
+                provider.meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
                     .toDoLists[widget.indexToDoList].toDoList.length;
             i++)
           !modify

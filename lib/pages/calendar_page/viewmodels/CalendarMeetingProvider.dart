@@ -8,6 +8,8 @@ import '../models/MeetingModel.dart';
 class CalendarEventProvider with ChangeNotifier {
   CalendarView _calendarView = CalendarView.week;
   int _selectedDrawerIndex = 2;
+  bool _isChungAngCalendarView = true;
+  bool _isPersonalCalendarView = true;
   bool _chungAngCalendar = false;
   bool _personalCalendar = true;
 
@@ -21,10 +23,15 @@ class CalendarEventProvider with ChangeNotifier {
   bool _isAllDay = false;
   final List<ToDoListModel> _toDoLists = [];
 
-  final List<Meeting> _meetings = <Meeting>[];
+  Map<String, List<Meeting>> _meetingsMap = {
+    "chungang": [],
+    "personal": [],
+    "both": []
+  };
+
+  String _selectedCalendar = "personal";
 
   // Getters
-  CalendarView get calendarView => _calendarView;
   String get title => _title;
   String get description => _description;
   DateTime get startDate => _startDate;
@@ -32,12 +39,18 @@ class CalendarEventProvider with ChangeNotifier {
   TimeOfDay get startTime => _startTime;
   TimeOfDay get endTime => _endTime;
   Color get eventColor => _eventColor;
-  int get selectedDrawerIndex => _selectedDrawerIndex;
   bool get isAllDay => _isAllDay;
-  List<Meeting> get meetingsList => _meetings;
-  bool get chungAngCalendar=> _chungAngCalendar;
+  bool get chungAngCalendar => _chungAngCalendar;
   bool get personalCalendar => _personalCalendar;
   List<ToDoListModel> get toDoLists => _toDoLists;
+
+  CalendarView get calendarView => _calendarView;
+  int get selectedDrawerIndex => _selectedDrawerIndex;
+  bool get isChungAngCalendarView=> _isChungAngCalendarView;
+  bool get isPersonalCalendarView => _isPersonalCalendarView;
+
+  Map<String, List<Meeting>> get meetingsMap => _meetingsMap;
+  String get selectedCalendar => _selectedCalendar;
 
   // Setters
   void setCalendarView(CalendarView view) {
@@ -90,12 +103,26 @@ class CalendarEventProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void setChungAngCalendarView(bool value) {
+    _isChungAngCalendarView = value;
+    notifyListeners();
+  }
+  void setPersonalCalendarView(bool value) {
+    _isPersonalCalendarView = value;
+    notifyListeners();
+  }
+
   void setChungAngCalendar(bool value) {
     _chungAngCalendar = value;
     notifyListeners();
   }
   void setPersonalCalendar(bool value) {
     _personalCalendar = value;
+    notifyListeners();
+  }
+
+  void setSelectedCalendar(String value) {
+    _selectedCalendar = value;
     notifyListeners();
   }
 
@@ -163,34 +190,69 @@ class CalendarEventProvider with ChangeNotifier {
   }
 
   Future<bool> getMeetingFromLocalStorage() async {
-    if (_meetings.isEmpty) {
+    // to modify
+    var key = "";
+    if (_meetingsMap["chungang"]!.isEmpty &&
+        _meetingsMap["personal"]!.isEmpty &&
+        _meetingsMap["both"]!.isEmpty) {
       final events = await LocalStorage.getAllEvents();
+      print(events.entries.length);
       for (var calendar in events.entries) {
+        key = calendar.key.replaceAll(LocalStorage.eventExtension, '').trim();
+        print(key);
         for (var meeting in calendar.value) {
-          print(meeting.toJson().toString());
-          _meetings.add(meeting);
+          if (_meetingsMap[key] != null) {
+            _meetingsMap[key]?.add(meeting);
+          }
         }
-        break; //I only want to get the first calendar since multiple calendar is not yet implemented
       }
     }
     return true;
   }
 
+  void updateSelectedCalendar() {
+    if (_isChungAngCalendarView && !_isPersonalCalendarView) {
+      _selectedCalendar = "chungang";
+    } else if (!_isChungAngCalendarView && _isPersonalCalendarView) {
+      _selectedCalendar = "personal";
+    } else {
+      _selectedCalendar = "both";
+    }
+    notifyListeners();
+  }
+
   void addEventToMeetingList() {
-    const filename = "calendar1"; //to be changed in the future for multiple calendars
     final DateTime startTime = combineDateTimeAndTimeOfDay(_startDate, _startTime);
     final DateTime endTime = combineDateTimeAndTimeOfDay(_endDate, _endTime);
-    meetingsList.add(
-        Meeting(
-            from: startTime,
-            to: endTime,
-            title: _title,
-            background: _eventColor,
-            isAllDay: _isAllDay,
-            toDoLists: List.from(_toDoLists),
-        )
+
+
+    Meeting newMeeting = Meeting(
+        from: startTime,
+        to: endTime,
+        title: _title,
+        background: _eventColor,
+        isAllDay: _isAllDay,
+        toDoLists: List.from(_toDoLists),
     );
-    LocalStorage.writeEventsToFile(meetingsList, filename);
+
+    String mapKey = "";
+    if (chungAngCalendar) {
+      mapKey = "chungang";
+    } else if (personalCalendar) {
+      mapKey = "personal";
+    }
+
+    if (mapKey.isNotEmpty) {
+      if (_meetingsMap.containsKey(mapKey)) {
+        _meetingsMap[mapKey]!.add(newMeeting);
+        _meetingsMap["both"]!.add(newMeeting);
+        LocalStorage.writeEventsToFile(_meetingsMap[mapKey]!, mapKey);
+        LocalStorage.writeEventsToFile(_meetingsMap["both"]!, "both");
+      } else {
+        return;
+      }
+      notifyListeners();
+    }
     notifyListeners();
   }
 
@@ -209,24 +271,24 @@ class CalendarEventProvider with ChangeNotifier {
   }
 
   void changeBoolOfTask(int indexMeeting, int indexToDoList, int indexTask, bool value) {
-      _meetings[indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].completed = value;
+      _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].completed = value;
       const filename = "calendar1"; //to be changed in the future for multiple calendars
-      LocalStorage.writeEventsToFile(meetingsList, filename);
+      LocalStorage.writeEventsToFile(_meetingsMap[_selectedCalendar]!, _selectedCalendar);
       notifyListeners();
   }
 
   void changeNameOfTask(int indexMeeting, int indexToDoList, int indexTask, String value) {
-    _meetings[indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].task = value;
+    _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].task = value;
     notifyListeners();
   }
 
   void changeTitleOfToDoList(int indexMeeting, int indexToDoList, String value) {
-    _meetings[indexMeeting].toDoLists[indexToDoList].name = value;
+    _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].name = value;
     notifyListeners();
   }
 
   void saveMeetings() {
-    const filename = "calendar1"; //to be changed in the future for multiple calendars
-    LocalStorage.writeEventsToFile(meetingsList, filename);
+    LocalStorage.writeEventsToFile(_meetingsMap[_selectedCalendar]!, _selectedCalendar);
+    LocalStorage.writeEventsToFile(_meetingsMap["both"]!, "both");
   }
 }
