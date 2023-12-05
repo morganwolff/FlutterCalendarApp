@@ -50,11 +50,15 @@ class Meeting {
   String title;
   Color background;
   bool isAllDay;
+  String description;
+  var uuid;
 
   Meeting({
     required this.from,
     required this.to,
     required this.title,
     required this.background,
-    required this.isAllDay});
+    required this.isAllDay,
+    required this.description,
+    required this.uuid});
 }

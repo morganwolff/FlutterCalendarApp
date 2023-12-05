@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
-
+import 'package:uuid/uuid.dart';
 import '../models/MeetingModel.dart';
 
 class CalendarEventProvider with ChangeNotifier {
@@ -47,6 +47,16 @@ class CalendarEventProvider with ChangeNotifier {
 
   Map<String, List<Meeting>> get meetingsMap => _meetingsMap;
   String get selectedCalendar => _selectedCalendar;
+
+  int _calendarKeyID = 0;
+
+  void forceRebuildCalendar() {
+    _calendarKeyID++;
+    notifyListeners();
+  }
+
+  int get calendarKeyID => _calendarKeyID;
+
 
   // Setters
   void setCalendarView(CalendarView view) {
@@ -198,20 +208,29 @@ class CalendarEventProvider with ChangeNotifier {
   void addEventToMeetingList() {
     final DateTime startTime = combineDateTimeAndTimeOfDay(_startDate, _startTime);
     final DateTime endTime = combineDateTimeAndTimeOfDay(_endDate, _endTime);
+    var uuid = Uuid();
 
+    if (_title.isEmpty) {
+      _title = "No title";
+    }
+    if (_description.isEmpty) {
+      _description = "No description";
+    }
 
     Meeting newMeeting = Meeting(
         from: startTime,
         to: endTime,
         title: _title,
         background: _eventColor,
-        isAllDay: _isAllDay
+        isAllDay: _isAllDay,
+        description: _description,
+        uuid: uuid.v4().toString(),
     );
 
     String mapKey = "";
-    if (chungAngCalendar) {
+    if (_chungAngCalendar) {
       mapKey = "chungang";
-    } else if (personalCalendar) {
+    } else if (_personalCalendar) {
       mapKey = "personal";
     }
 
