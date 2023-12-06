@@ -44,11 +44,17 @@ class LocalStorage {
   }
 
   static Future<void> writeEventsToFile(List<Meeting> events, String filename) async {
+    List<Meeting> eventsCleaned = [];
+    for (var event in events) {
+      if (event.chungAng == false) {
+        eventsCleaned.add(event);
+      }
+    }
     if (!filename.contains(eventExtension)) {
       filename = "$filename$eventExtension";
     }
     final file = await getLocalFile(filename);
-    file.writeAsStringSync(jsonEncode(events));
+    file.writeAsStringSync(jsonEncode(eventsCleaned));
   }
 
   static Future<int> deleteLocalFile(String name) async {

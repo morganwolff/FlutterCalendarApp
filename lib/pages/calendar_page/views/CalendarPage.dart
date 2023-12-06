@@ -108,7 +108,7 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
       ),
       body: FutureBuilder<bool>(
-        future: provider.getMeetingFromLocalStorage(),
+        future: provider.getEvents(context),
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
             return SfCalendar(

@@ -1,6 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/common/utils/chung_ang_time_converter.dart';
 import 'package:flutter_calendar_app/locals/local_storage.dart';
+import 'package:flutter_calendar_app/pages/calendar_page/models/chung_ang_class_model.dart';
+import 'package:flutter_calendar_app/pages/login/viewmodels/LoginVewModel.dart';
 import 'package:flutter_calendar_app/pages/to_do_list/models/to_do_list_model.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:uuid/uuid.dart';
 import '../models/MeetingModel.dart';
@@ -8,7 +14,7 @@ import '../models/MeetingModel.dart';
 class CalendarEventProvider with ChangeNotifier {
   CalendarView _calendarView = CalendarView.week;
   int _selectedDrawerIndex = 2;
-  bool _isChungAngCalendarView = true;
+  bool _isChungAngCalendarView = false;
   bool _isPersonalCalendarView = true;
   bool _chungAngCalendar = false;
   bool _personalCalendar = true;
@@ -199,6 +205,47 @@ class CalendarEventProvider with ChangeNotifier {
     );
   }
 
+  void fillChungAngCalendar(List<List<ChungAngClassModel>> schedule) {
+    int year = 2023;
+    int month = 12;
+    int day = ChungAngTimeConverter.findFirstMondayOfTheMonth(month, year);
+    int i = 0;
+    for(day; day <= 22; day++) {
+      if (i == 7) {
+        i = 0;
+      }
+      for (var course in schedule[i]) {
+        var meeting = Meeting.fromChungAng(course, day, month, year);
+        _meetingsMap["chungang"]!.add(meeting);
+        _meetingsMap["both"]!.add(meeting);
+      }
+      i++;
+    }
+  }
+
+  Future<bool> getEvents(BuildContext context) async {
+    var loginProvider = UserInfosViewModel();
+
+    await getMeetingFromLocalStorage();
+    await loginProvider.fetchData("50231619");
+    var apiRes = loginProvider.getUserCAUPlanning();
+    print(apiRes.toString());
+    print(_meetingsMap["chungang"]!.length);
+    if (_meetingsMap["chungang"]!.isEmpty) {
+      List<List<ChungAngClassModel>> schedule = [];
+      List<ChungAngClassModel> tmp = [];
+      for (var day in apiRes) {
+        tmp.clear();
+        for (var course in day) {
+          tmp.add(ChungAngClassModel.fromMap(course));
+        }
+        schedule.add(List.from(tmp));
+      }
+      fillChungAngCalendar(schedule);
+    }
+    return true;
+  }
+
   Future<bool> getMeetingFromLocalStorage() async {
     // to modify
     var key = "";
@@ -234,6 +281,7 @@ class CalendarEventProvider with ChangeNotifier {
   void addEventToMeetingList() {
     final DateTime startTime = combineDateTimeAndTimeOfDay(_startDate, _startTime);
     final DateTime endTime = combineDateTimeAndTimeOfDay(_endDate, _endTime);
+    print(startTime);
     var uuid = Uuid();
 
     if (_title.isEmpty) {

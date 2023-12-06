@@ -26,6 +26,10 @@ class UserInfosViewModel {
     return _userInfosModel.usernameController;
   }
 
+  List<dynamic> getUserCAUPlanning() {
+    return _userInfosModel.planningCau;
+  }
+
   /////////////////// TRANSLATE TIME  ///////////////////
   String translateEnglishTime (String time) {
 
@@ -167,13 +171,11 @@ class UserInfosViewModel {
         body: jsonEncode(requestBody),
       );
 
-
       if (response.statusCode == 200) {
         List<Map<String, dynamic>> scheduleData = (json.decode(response.body.toString()) as List<dynamic>)
             .cast<Map<String, dynamic>>();
 
         _userInfosModel.planningCau = dayPlanningList(0, "", scheduleData, []);
-
       } else {
         // If the server did not return a 200 OK response,
         // throw an exception or handle the error based on your use case
