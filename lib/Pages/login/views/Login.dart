@@ -99,7 +99,7 @@ class _LoginPage extends State<LoginPage> {
                         builder: (context) => SubscribePage(),
                       ),
                     );
-                    _userInfos.fetchData();
+//                    _userInfos.fetchData();
                     print('Student Id Number --> ${_userInfos.get_studentIdNumberController().text} / username --> ${_userInfos.get_usernameController().text}');
                   },
                   style: ButtonStyle(
