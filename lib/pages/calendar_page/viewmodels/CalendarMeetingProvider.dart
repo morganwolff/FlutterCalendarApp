@@ -1,4 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/common/utils/chung_ang_time_converter.dart';
+import 'package:flutter_calendar_app/locals/local_storage.dart';
+import 'package:flutter_calendar_app/pages/calendar_page/models/chung_ang_class_model.dart';
+import 'package:flutter_calendar_app/pages/login/viewmodels/LoginVewModel.dart';
+import 'package:flutter_calendar_app/pages/to_do_list/models/to_do_list_model.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'package:uuid/uuid.dart';
 import '../models/MeetingModel.dart';
@@ -6,7 +14,7 @@ import '../models/MeetingModel.dart';
 class CalendarEventProvider with ChangeNotifier {
   CalendarView _calendarView = CalendarView.week;
   int _selectedDrawerIndex = 2;
-  bool _isChungAngCalendarView = true;
+  bool _isChungAngCalendarView = false;
   bool _isPersonalCalendarView = true;
   bool _chungAngCalendar = false;
   bool _personalCalendar = true;
@@ -19,6 +27,7 @@ class CalendarEventProvider with ChangeNotifier {
   TimeOfDay _endTime = TimeOfDay(hour: TimeOfDay.now().hour + 2, minute: 0);
   Color _eventColor = Colors.blue;
   bool _isAllDay = false;
+  final List<ToDoListModel> _toDoLists = [];
 
   Map<String, List<Meeting>> _meetingsMap = {
     "chungang": [],
@@ -39,6 +48,7 @@ class CalendarEventProvider with ChangeNotifier {
   bool get isAllDay => _isAllDay;
   bool get chungAngCalendar => _chungAngCalendar;
   bool get personalCalendar => _personalCalendar;
+  List<ToDoListModel> get toDoLists => _toDoLists;
 
   CalendarView get calendarView => _calendarView;
   int get selectedDrawerIndex => _selectedDrawerIndex;
@@ -141,6 +151,7 @@ class CalendarEventProvider with ChangeNotifier {
     _endTime = TimeOfDay(hour: TimeOfDay.now().hour + 2, minute: 0);
     _eventColor = Colors.blue;
     _isAllDay = false;
+    _toDoLists.clear();
     notifyListeners();
   }
 
@@ -194,6 +205,68 @@ class CalendarEventProvider with ChangeNotifier {
     );
   }
 
+  void fillChungAngCalendar(List<List<ChungAngClassModel>> schedule) {
+    int year = 2023;
+    int month = 12;
+    int day = ChungAngTimeConverter.findFirstMondayOfTheMonth(month, year);
+    int i = 0;
+    for(day; day <= 22; day++) {
+      if (i == 7) {
+        i = 0;
+      }
+      for (var course in schedule[i]) {
+        var meeting = Meeting.fromChungAng(course, day, month, year);
+        _meetingsMap["chungang"]!.add(meeting);
+        _meetingsMap["both"]!.add(meeting);
+      }
+      i++;
+    }
+  }
+
+  Future<bool> getEvents(BuildContext context) async {
+    var loginProvider = UserInfosViewModel();
+
+    await getMeetingFromLocalStorage();
+    await loginProvider.fetchData("50231619");
+    var apiRes = loginProvider.getUserCAUPlanning();
+    print(apiRes.toString());
+    print(_meetingsMap["chungang"]!.length);
+    if (_meetingsMap["chungang"]!.isEmpty) {
+      List<List<ChungAngClassModel>> schedule = [];
+      List<ChungAngClassModel> tmp = [];
+      for (var day in apiRes) {
+        tmp.clear();
+        for (var course in day) {
+          tmp.add(ChungAngClassModel.fromMap(course));
+        }
+        schedule.add(List.from(tmp));
+      }
+      fillChungAngCalendar(schedule);
+    }
+    return true;
+  }
+
+  Future<bool> getMeetingFromLocalStorage() async {
+    // to modify
+    var key = "";
+    if (_meetingsMap["chungang"]!.isEmpty &&
+        _meetingsMap["personal"]!.isEmpty &&
+        _meetingsMap["both"]!.isEmpty) {
+      final events = await LocalStorage.getAllEvents();
+      print(events.entries.length);
+      for (var calendar in events.entries) {
+        key = calendar.key.replaceAll(LocalStorage.eventExtension, '').trim();
+        print(key);
+        for (var meeting in calendar.value) {
+          if (_meetingsMap[key] != null) {
+            _meetingsMap[key]?.add(meeting);
+          }
+        }
+      }
+    }
+    return true;
+  }
+
   void updateSelectedCalendar() {
     if (_isChungAngCalendarView && !_isPersonalCalendarView) {
       _selectedCalendar = "chungang";
@@ -208,6 +281,7 @@ class CalendarEventProvider with ChangeNotifier {
   void addEventToMeetingList() {
     final DateTime startTime = combineDateTimeAndTimeOfDay(_startDate, _startTime);
     final DateTime endTime = combineDateTimeAndTimeOfDay(_endDate, _endTime);
+    print(startTime);
     var uuid = Uuid();
 
     if (_title.isEmpty) {
@@ -223,6 +297,7 @@ class CalendarEventProvider with ChangeNotifier {
         title: _title,
         background: _eventColor,
         isAllDay: _isAllDay,
+        toDoLists: List.from(_toDoLists),
         description: _description,
         uuid: uuid.v4().toString(),
     );
@@ -238,6 +313,8 @@ class CalendarEventProvider with ChangeNotifier {
       if (_meetingsMap.containsKey(mapKey)) {
         _meetingsMap[mapKey]!.add(newMeeting);
         _meetingsMap["both"]!.add(newMeeting);
+        LocalStorage.writeEventsToFile(_meetingsMap[mapKey]!, mapKey);
+        LocalStorage.writeEventsToFile(_meetingsMap["both"]!, "both");
       } else {
         return;
       }
@@ -273,6 +350,7 @@ class CalendarEventProvider with ChangeNotifier {
     if (locations.isNotEmpty) {
       locations.forEach((listName, index) {
         _meetingsMap[listName]!.removeAt(index);
+        LocalStorage.writeEventsToFile(_meetingsMap[listName]!, listName);
 
         for (var key in locations.keys.toList()) {
           if (key == listName && locations[key]! > index) {
@@ -300,6 +378,8 @@ class CalendarEventProvider with ChangeNotifier {
       _eventColor = meetingToEdit.background;
       _isAllDay = meetingToEdit.isAllDay;
       _description = meetingToEdit.description;
+      _toDoLists.clear();
+      _toDoLists.addAll(meetingToEdit.toDoLists);
 
       notifyListeners();
     }
@@ -317,6 +397,8 @@ class CalendarEventProvider with ChangeNotifier {
         meetingToUpdate.background = _eventColor;
         meetingToUpdate.isAllDay = _isAllDay;
         meetingToUpdate.description = _description;
+        meetingToUpdate.toDoLists = List.from(_toDoLists);
+        LocalStorage.writeEventsToFile(_meetingsMap[listName]!, listName);
       });
 
       notifyListeners();
@@ -325,4 +407,46 @@ class CalendarEventProvider with ChangeNotifier {
     }
   }
 
+  void addToDoList(ToDoListModel list) {
+    _toDoLists.add(list);
+    notifyListeners();
+  }
+
+  void replaceToDoList(ToDoListModel list, int index) {
+    _toDoLists[index] = list;
+    notifyListeners();
+  }
+
+  void changeBoolOfTask(int indexMeeting, int indexToDoList, int indexTask, bool value) {
+      var uuid = _meetingsMap[_selectedCalendar]![indexMeeting].uuid;
+      final indexes = findAllMeetingOccurrences(uuid);
+      for (var entry in indexes.entries) {
+        _meetingsMap[entry.key]![entry.value]!.toDoLists[indexToDoList].toDoList[indexTask].completed = value;
+        LocalStorage.writeEventsToFile(_meetingsMap[entry.key]!, entry.key);
+      }
+      notifyListeners();
+  }
+
+  void changeNameOfTask(int indexMeeting, int indexToDoList, int indexTask, String value) {
+    var uuid = _meetingsMap[_selectedCalendar]![indexMeeting].uuid;
+    final indexes = findAllMeetingOccurrences(uuid);
+    for (var entry in indexes.entries) {
+      _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].task = value;
+    }
+    notifyListeners();
+  }
+
+  void changeTitleOfToDoList(int indexMeeting, int indexToDoList, String value) {
+    var uuid = _meetingsMap[_selectedCalendar]![indexMeeting].uuid;
+    final indexes = findAllMeetingOccurrences(uuid);
+    for (var entry in indexes.entries) {
+      _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].name = value;
+    }
+    notifyListeners();
+  }
+
+  void saveMeetings() {
+    LocalStorage.writeEventsToFile(_meetingsMap[_selectedCalendar]!, _selectedCalendar);
+    LocalStorage.writeEventsToFile(_meetingsMap["both"]!, "both");
+  }
 }

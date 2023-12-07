@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
+import 'package:flutter_calendar_app/pages/to_do_list/to_do_list_module/views/to_do_list_module.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -77,7 +78,7 @@ class EventDetailsPage extends StatelessWidget {
                   )
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -125,7 +126,7 @@ class EventDetailsPage extends StatelessWidget {
                   )
                 ],
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -143,17 +144,20 @@ class EventDetailsPage extends StatelessWidget {
                           (provider.meetingsMap[provider
                               .selectedCalendar]![indexes[provider
                               .selectedCalendar]!].description),
-                          softWrap: true, style: TextStyle(fontSize: 16)),
+                          softWrap: true, style: const TextStyle(fontSize: 16)),
                     ),
                   ),
                 ],
               ),
+                const Divider(),
+                for (int i = 0; i < provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].toDoLists.length; i++)
+                    ToDoListModule(indexMeeting: indexes[provider.selectedCalendar]!, indexToDoList: i)
             ],
           ),
         ),
       );
     } else {
-      return Scaffold(
+      return const Scaffold(
         body: Text("No event"),
       );
     }

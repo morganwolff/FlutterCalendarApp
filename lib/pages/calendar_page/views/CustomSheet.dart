@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/common/components/to_do_list/list_to_do_list.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -9,7 +10,7 @@ class MyCustomBottomSheet extends StatefulWidget {
   const MyCustomBottomSheet({super.key, this.meetingUuid});
 
   @override
-  _MyCustomBottomSheetState createState() => _MyCustomBottomSheetState();
+  State<MyCustomBottomSheet> createState() => _MyCustomBottomSheetState();
 }
 
 class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
@@ -100,7 +101,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
             ),
 
             const SizedBox(height: 20),
-            Divider(),
+            const Divider(),
             SwitchListTile(
               title: const Text('All day event'),
               value: provider.isAllDay,
@@ -141,9 +142,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                 ],
               ),
             ),
-            SizedBox(
-              height: 20,
-            ),
+            const SizedBox(height: 20,),
             Padding(
               padding: const EdgeInsets.only(left: 50, right: 50),
               child: Column(
@@ -175,7 +174,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               ),
             ),
             const SizedBox(height: 20),
-            Divider(),
+            const Divider(),
             Column(
               children: <Widget>[
                 InkWell(
@@ -183,10 +182,10 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Text('Choose Color'),
+                      const Text('Choose Color'),
                       ColoredBox(
                         color: provider.eventColor,
-                        child: SizedBox(height: 30, width: 30),
+                        child: const SizedBox(height: 30, width: 30),
                       ),
                       const Icon(
                         Icons.keyboard_arrow_right_rounded,
@@ -195,10 +194,11 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                       ),
                     ],
                   ),
-                )
+                ),
               ],
             ),
-            Divider(),
+            const ListToDoList(),
+            const Divider(),
             GestureDetector(
               onTap: () => _showCalendarChoices(context),
               child: Row(

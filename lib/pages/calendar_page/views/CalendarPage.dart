@@ -10,7 +10,7 @@ class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
 
   @override
-  _CalendarPageState createState() => _CalendarPageState();
+  State<CalendarPage> createState() => _CalendarPageState();
 }
 
 class _CalendarPageState extends State<CalendarPage> {
@@ -103,34 +103,46 @@ class _CalendarPageState extends State<CalendarPage> {
           ],
         ),
       ),
-      body: SfCalendar(
-        key: ValueKey(provider.calendarView),
-        view: provider.calendarView,
-        firstDayOfWeek: 1,
-        dataSource:
-            MeetingDataSource(provider.meetingsMap[provider.selectedCalendar]!),
-        onTap: calendarTapped,
-        monthViewSettings: const MonthViewSettings(
-            showAgenda: true,
-            appointmentDisplayCount: 6,
-            agendaStyle: AgendaStyle(
-              backgroundColor: Colors.white60,
-              appointmentTextStyle: TextStyle(
-                  fontSize: 14,
-                  fontStyle: FontStyle.italic,
-                  color: Colors.white),
-              dateTextStyle: TextStyle(
-                  fontStyle: FontStyle.normal,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w300,
-                  color: Colors.black),
-              dayTextStyle: TextStyle(
-                  fontStyle: FontStyle.normal,
-                  fontSize: 26,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black),
-            )),
-      ),
+      body: FutureBuilder<bool>(
+        future: provider.getEvents(context),
+        builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+          if (snapshot.hasData) {
+            return SfCalendar(
+              key: ValueKey(provider.calendarView),
+              view: provider.calendarView,
+              firstDayOfWeek: 1,
+              dataSource: MeetingDataSource(provider.meetingsMap[provider.selectedCalendar]!),
+              onTap: calendarTapped,
+              monthViewSettings: const MonthViewSettings(
+                  showAgenda: true,
+                  appointmentDisplayCount: 6,
+                  agendaStyle: AgendaStyle(
+                    backgroundColor: Colors.white60,
+                    appointmentTextStyle: TextStyle(
+                        fontSize: 14,
+                        fontStyle: FontStyle.italic,
+                        color: Colors.white),
+                    dateTextStyle: TextStyle(
+                        fontStyle: FontStyle.normal,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.black),
+                    dayTextStyle: TextStyle(
+                        fontStyle: FontStyle.normal,
+                        fontSize: 26,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black),
+                  )
+              ),
+            );
+          }
+          else {
+            return const Center(
+              child: Text("Fetching your meetings and events..."),
+            );
+          }
+        },
+      )
     );
   }
 
