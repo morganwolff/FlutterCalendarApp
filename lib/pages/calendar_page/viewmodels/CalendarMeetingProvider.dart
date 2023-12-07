@@ -335,7 +335,7 @@ class CalendarEventProvider with ChangeNotifier {
     });
 
     if (locations.isEmpty) {
-      print("Meeting not found with uuid: $uuid");
+      print("FIND Meeting not found with uuid: $uuid");
     } else {
       locations.forEach((listName, index) {
       });
@@ -361,7 +361,7 @@ class CalendarEventProvider with ChangeNotifier {
 
       notifyListeners();
     } else {
-      print("Meeting not found with uuid: $uuid");
+      print("DELETE Meeting not found with uuid: $uuid");
     }
   }
 
@@ -403,7 +403,7 @@ class CalendarEventProvider with ChangeNotifier {
 
       notifyListeners();
     } else {
-      print("Meeting not found with uuid: $uuid");
+      print("UPDATE Meeting not found with uuid: $uuid");
     }
   }
 
