@@ -4,14 +4,23 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class MyCustomBottomSheet extends StatefulWidget {
-  const MyCustomBottomSheet({super.key});
+  final String? meetingUuid;
+
+  const MyCustomBottomSheet({super.key, this.meetingUuid});
 
   @override
   _MyCustomBottomSheetState createState() => _MyCustomBottomSheetState();
 }
 
 class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
-  Color? selectedColor = Colors.blue;
+  @override
+  void initState() {
+    super.initState();
+    if (widget.meetingUuid != null) {
+      var provider = Provider.of<CalendarEventProvider>(context, listen: false);
+      provider.loadMeetingData(widget.meetingUuid!);
+    }
+  }
 
   final List<Map<String, dynamic>> colorOptions = [
     {"color": Colors.deepPurpleAccent, "name": "Purple"},
@@ -54,7 +63,11 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                         TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 TextButton(
                   onPressed: () {
-                    provider.addEventToMeetingList();
+                    if (widget.meetingUuid == null) {
+                      provider.addEventToMeetingList();
+                    } else {
+                      provider.updateMeeting(widget.meetingUuid!);
+                    }
                     provider.resetEventVariables();
                     Navigator.pop(context);
                   },
@@ -63,6 +76,8 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               ],
             ),
             TextField(
+              controller: TextEditingController(text: provider.title) // Initialisez avec la valeur du provider
+                ..selection = TextSelection.fromPosition(TextPosition(offset: provider.title.length)), // Placez le curseur à la fin du texte
               decoration: const InputDecoration(
                 labelText: 'Titre',
                 border: OutlineInputBorder(),
@@ -71,6 +86,8 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
             ),
             const SizedBox(height: 20),
             TextField(
+              controller: TextEditingController(text: provider.description) // Initialisez avec la valeur du provider
+                ..selection = TextSelection.fromPosition(TextPosition(offset: provider.description.length)), // Placez le curseur à la fin du texte
               decoration: const InputDecoration(
                 labelText: 'Description',
                 border: OutlineInputBorder(),
@@ -81,6 +98,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               onChanged: (value) =>
                   setState(() => provider.setDescription(value)),
             ),
+
             const SizedBox(height: 20),
             Divider(),
             SwitchListTile(
@@ -267,11 +285,10 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               children: colorOptions
                   .map((colorOption) => CheckboxListTile(
                         title: Text(colorOption["name"]),
-                        value: selectedColor == colorOption["color"],
+                        value: provider.eventColor == colorOption["color"],
                         onChanged: (bool? value) {
                           setState(() {
                             if (value == true) {
-                              selectedColor = colorOption["color"];
                               provider.setEventColor(colorOption["color"]);
                             }
                           });

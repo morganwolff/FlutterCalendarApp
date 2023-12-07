@@ -155,12 +155,6 @@ class _CalendarPageState extends State<CalendarPage> {
 
       Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => EventDetailsPage(
-          title: appointmentDetails.title,
-          description: appointmentDetails.description,
-          startDate: appointmentDetails.from,
-          endDate: appointmentDetails.to,
-          isAllDay: appointmentDetails.isAllDay,
-          background: appointmentDetails.background,
           uuid: appointmentDetails.uuid,
         ),
       ));

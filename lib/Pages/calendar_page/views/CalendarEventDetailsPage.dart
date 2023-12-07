@@ -1,40 +1,45 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import 'CustomSheet.dart';
+
 
 
 class EventDetailsPage extends StatelessWidget {
-  final String title;
-  final String description;
-  final DateTime startDate;
-  final DateTime endDate;
-  final bool isAllDay;
-  final Color background;
   final String uuid;
 
-  const EventDetailsPage({
+  EventDetailsPage({
     Key? key,
-    required this.title,
-    required this.description,
-    required this.startDate,
-    required this.endDate,
-    required this.isAllDay,
-    required this.background,
     required this.uuid,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<CalendarEventProvider>(context);
+    Map<String, int> indexes = provider.findAllMeetingOccurrences(uuid);
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.edit_outlined),
-            onPressed: () {},
+            onPressed: () {
+              provider.loadMeetingData(uuid);
+
+              showModalBottomSheet(
+                context: context,
+                builder: (context) => MyCustomBottomSheet(meetingUuid: uuid),
+              );
+            },
           ),
           IconButton(
             icon: const Icon(Icons.delete_outline),
-            onPressed: () {},
+            onPressed: () {
+              provider.deleteMeeting(uuid);
+              Navigator.pop(context);
+            },
           ),
         ],
       ),
@@ -49,7 +54,7 @@ class EventDetailsPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 5.0),
                   child: ColoredBox(
-                    color: background,
+                    color: (provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].background),
                     child: const SizedBox(height: 30, width: 30),
                   ),
                 ),
@@ -57,8 +62,10 @@ class EventDetailsPage extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 10.0, top: 5.0),
                   child: Column(
                     children: [
-                      Text(title,
-                          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)),
+                      Text(
+                          (provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].title),
+                          style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold)
+                      ),
                     ],
                   ),
                 )
@@ -80,16 +87,16 @@ class EventDetailsPage extends StatelessWidget {
                   child: Column(
                     children: [
                       Text(
-                        isAllDay
-                            ? DateFormat('EEE, MM/dd/y').format(startDate)
-                            : DateFormat('EEE, MM/dd/y').add_jm().format(startDate),
+                        (provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].isAllDay)
+                            ? DateFormat('EEE, MM/dd/y').format((provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].from))
+                            : DateFormat('EEE, MM/dd/y').add_jm().format((provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].from)),
                         style: const TextStyle(fontSize: 16,  fontWeight: FontWeight.bold),
                       ),
 
                       Text(
-                        isAllDay
+                        (provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].isAllDay)
                             ? ''
-                            : DateFormat('EEE, MM/dd/y').add_jm().format(endDate),
+                            : DateFormat('EEE, MM/dd/y').add_jm().format((provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].to)),
                         style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                     ],
@@ -111,7 +118,8 @@ class EventDetailsPage extends StatelessWidget {
                 Expanded(
                   child: Padding(
                     padding: const EdgeInsets.only(left: 10.0, top: 5.0),
-                    child: Text(description,
+                    child: Text(
+                        (provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].description),
                         softWrap: true, style: TextStyle(fontSize: 16)),
                   ),
                 ),

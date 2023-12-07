@@ -246,8 +246,83 @@ class CalendarEventProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void removeEventToList(int index) {
-    // TODO: Implement the function
+  Map<String, int> findAllMeetingOccurrences(String uuid) {
+    Map<String, int> locations = {};
+
+    _meetingsMap.forEach((listName, meetings) {
+      for (int i = 0; i < meetings.length; i++) {
+        if (meetings[i].uuid == uuid) {
+          locations[listName] = i;
+        }
+      }
+    });
+
+    if (locations.isEmpty) {
+      print("Meeting not found with uuid: $uuid");
+    } else {
+      locations.forEach((listName, index) {
+      });
+    }
+
+    return locations;
+  }
+
+  void deleteMeeting(String uuid) {
+    var locations = findAllMeetingOccurrences(uuid);
+
+    if (locations.isNotEmpty) {
+      locations.forEach((listName, index) {
+        _meetingsMap[listName]!.removeAt(index);
+
+        for (var key in locations.keys.toList()) {
+          if (key == listName && locations[key]! > index) {
+            locations[key] = locations[key]! - 1;
+          }
+        }
+      });
+
+      notifyListeners();
+    } else {
+      print("Meeting not found with uuid: $uuid");
+    }
+  }
+
+  void loadMeetingData(String uuid) {
+    var locations = findAllMeetingOccurrences(uuid);
+    if (locations.isNotEmpty) {
+      String listName = locations.keys.first;
+      int index = locations[listName]!;
+      Meeting meetingToEdit = _meetingsMap[listName]![index];
+
+      _title = meetingToEdit.title;
+      _startDate = meetingToEdit.from;
+      _endDate = meetingToEdit.to;
+      _eventColor = meetingToEdit.background;
+      _isAllDay = meetingToEdit.isAllDay;
+      _description = meetingToEdit.description;
+
+      notifyListeners();
+    }
+  }
+
+  void updateMeeting(String uuid) {
+    var locations = findAllMeetingOccurrences(uuid);
+
+    if (locations.isNotEmpty) {
+      locations.forEach((listName, index) {
+        Meeting meetingToUpdate = _meetingsMap[listName]![index];
+        meetingToUpdate.title = _title;
+        meetingToUpdate.from = _startDate;
+        meetingToUpdate.to = _endDate;
+        meetingToUpdate.background = _eventColor;
+        meetingToUpdate.isAllDay = _isAllDay;
+        meetingToUpdate.description = _description;
+      });
+
+      notifyListeners();
+    } else {
+      print("Meeting not found with uuid: $uuid");
+    }
   }
 
 }
