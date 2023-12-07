@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/locals/app_locale.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../locals/local_storage.dart';
@@ -35,7 +37,7 @@ class _FieldModifyTaskState extends State<FieldModifyTask> {
             initialValue: provider.meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
                 .toDoLists[widget.indexToDoList].toDoList[widget.index].task,
             decoration: InputDecoration(
-              labelText: 'Task ${widget.index + 1}',
+              labelText: '${AppLocale.task.getString(context)} ${widget.index + 1}',
               border: const OutlineInputBorder(),
             ),
             onChanged: (value) {
@@ -187,9 +189,9 @@ class _ToDoListModuleState extends State<ToDoListModule> {
                     child: TextFormField(
                         initialValue: provider.meetingsMap[provider.selectedCalendar]![widget.indexMeeting]
                             .toDoLists[widget.indexToDoList].name,
-                        decoration: const InputDecoration(
-                          labelText: 'Titre',
-                          border: OutlineInputBorder(),
+                        decoration: InputDecoration(
+                          labelText: AppLocale.title.getString(context),
+                          border: const OutlineInputBorder(),
                         ),
                         onChanged: (value) {
                           provider.changeTitleOfToDoList(
@@ -213,7 +215,7 @@ class _ToDoListModuleState extends State<ToDoListModule> {
                         modify = false;
                       });
                     },
-                    child: const Text("Save")),
+                    child: Text(AppLocale.save.getString(context))),
           ],
         ),
         for (int i = 0;

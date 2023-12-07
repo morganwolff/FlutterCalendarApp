@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/locals/app_locale.dart';
 import 'package:flutter_calendar_app/pages/to_do_list/create_to_do_list/views/create_to_do_list.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 
 
@@ -54,7 +56,7 @@ class _ListToDoListState extends State<ListToDoList> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("To Do Lists :"),
+            Text("${AppLocale.toDoLists.getString(context)} :"),
             IconButton(onPressed: () {
               showAdaptiveDialog(context: context, builder: (BuildContext context) {
                 return (

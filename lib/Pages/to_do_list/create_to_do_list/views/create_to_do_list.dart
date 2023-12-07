@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/locals/app_locale.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
 import 'package:flutter_calendar_app/pages/to_do_list/create_to_do_list/viewmodels/create_to_do_list_provider.dart';
 import 'package:flutter_calendar_app/pages/to_do_list/models/to_do_list_model.dart';
 import 'package:flutter_calendar_app/pages/to_do_list/models/to_do_task.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 
 class CreateToDoList extends StatefulWidget {
@@ -47,9 +49,9 @@ class _CreateToDoListState extends State<CreateToDoList> {
                         onPressed: () {
                           Navigator.pop(context);
                         }),
-                    const Text("Add a ToDo List",
+                      Text(AppLocale.addToDoList.getString(context),
                         style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     TextButton(
                       onPressed: () {
                         var newList = ToDoListModel(
@@ -62,15 +64,15 @@ class _CreateToDoListState extends State<CreateToDoList> {
                         provider.reset();
                         Navigator.pop(context);
                       },
-                      child: const Text("Save"),
+                      child: Text(AppLocale.save.getString(context)),
                     ),
                   ],
                 ),
                 TextFormField(
                     initialValue: provider.title,
-                    decoration: const InputDecoration(
-                      labelText: 'Titre',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: AppLocale.title.getString(context),
+                      border: const OutlineInputBorder(),
                     ),
                     onChanged: (value) {
                       provider.setTitle(value, true);
@@ -82,7 +84,7 @@ class _CreateToDoListState extends State<CreateToDoList> {
                       TextFormField(
                           initialValue: provider.tasks[i].task,
                           decoration: InputDecoration(
-                            labelText: 'Task ${i + 1}',
+                            labelText: '${AppLocale.task.getString(context)} ${i + 1}',
                             border: const OutlineInputBorder(),
                           ),
                           onChanged: (value) {provider.changeTaskName(i, value);}),
@@ -91,9 +93,9 @@ class _CreateToDoListState extends State<CreateToDoList> {
                   ),
                 TextField(
                     controller: fieldText,
-                    decoration: const InputDecoration(
-                      labelText: 'Nouvel Element',
-                      border: OutlineInputBorder(),
+                    decoration: InputDecoration(
+                      labelText: AppLocale.newElement.getString(context),
+                      border: const OutlineInputBorder(),
                     ),
                     onChanged: (value) {
                       provider.setName(value);
@@ -105,7 +107,7 @@ class _CreateToDoListState extends State<CreateToDoList> {
                       provider.addTask(ToDoTask(task: provider.name, completed: false));
                       provider.setName("");
                       fieldText.clear();
-                    }, child: Text("Ajouter"))
+                    }, child: Text(AppLocale.add.getString(context)))
                   ],
                 )
               ]),
