@@ -350,6 +350,7 @@ class CalendarEventProvider with ChangeNotifier {
     if (locations.isNotEmpty) {
       locations.forEach((listName, index) {
         _meetingsMap[listName]!.removeAt(index);
+        LocalStorage.writeEventsToFile(_meetingsMap[listName]!, listName);
 
         for (var key in locations.keys.toList()) {
           if (key == listName && locations[key]! > index) {
@@ -377,6 +378,8 @@ class CalendarEventProvider with ChangeNotifier {
       _eventColor = meetingToEdit.background;
       _isAllDay = meetingToEdit.isAllDay;
       _description = meetingToEdit.description;
+      _toDoLists.clear();
+      _toDoLists.addAll(meetingToEdit.toDoLists);
 
       notifyListeners();
     }
@@ -394,6 +397,8 @@ class CalendarEventProvider with ChangeNotifier {
         meetingToUpdate.background = _eventColor;
         meetingToUpdate.isAllDay = _isAllDay;
         meetingToUpdate.description = _description;
+        meetingToUpdate.toDoLists = List.from(_toDoLists);
+        LocalStorage.writeEventsToFile(_meetingsMap[listName]!, listName);
       });
 
       notifyListeners();
@@ -413,18 +418,30 @@ class CalendarEventProvider with ChangeNotifier {
   }
 
   void changeBoolOfTask(int indexMeeting, int indexToDoList, int indexTask, bool value) {
-      _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].completed = value;
-      LocalStorage.writeEventsToFile(_meetingsMap[_selectedCalendar]!, _selectedCalendar);
+      var uuid = _meetingsMap[_selectedCalendar]![indexMeeting].uuid;
+      final indexes = findAllMeetingOccurrences(uuid);
+      for (var entry in indexes.entries) {
+        _meetingsMap[entry.key]![entry.value]!.toDoLists[indexToDoList].toDoList[indexTask].completed = value;
+        LocalStorage.writeEventsToFile(_meetingsMap[entry.key]!, entry.key);
+      }
       notifyListeners();
   }
 
   void changeNameOfTask(int indexMeeting, int indexToDoList, int indexTask, String value) {
-    _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].task = value;
+    var uuid = _meetingsMap[_selectedCalendar]![indexMeeting].uuid;
+    final indexes = findAllMeetingOccurrences(uuid);
+    for (var entry in indexes.entries) {
+      _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].toDoList[indexTask].task = value;
+    }
     notifyListeners();
   }
 
   void changeTitleOfToDoList(int indexMeeting, int indexToDoList, String value) {
-    _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].name = value;
+    var uuid = _meetingsMap[_selectedCalendar]![indexMeeting].uuid;
+    final indexes = findAllMeetingOccurrences(uuid);
+    for (var entry in indexes.entries) {
+      _meetingsMap[_selectedCalendar]![indexMeeting].toDoLists[indexToDoList].name = value;
+    }
     notifyListeners();
   }
 

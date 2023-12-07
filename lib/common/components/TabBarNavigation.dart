@@ -12,7 +12,7 @@ class TabBarPage extends StatefulWidget {
 
 class _TabBarPageState extends State<TabBarPage> {
   int _currentIndex = 0;
-  final List<Widget> _pages = [CalendarPage(), AllToDoLists(index: 0)];
+  final List<Widget> _pages = [CalendarPage(), SettingsPage()];
 
   void _onItemTapped(int index) {
     setState(() {

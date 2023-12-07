@@ -101,7 +101,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
             ),
 
             const SizedBox(height: 20),
-            Divider(),
+            const Divider(),
             SwitchListTile(
               title: const Text('All day event'),
               value: provider.isAllDay,
@@ -174,7 +174,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               ),
             ),
             const SizedBox(height: 20),
-            Divider(),
+            const Divider(),
             Column(
               children: <Widget>[
                 InkWell(
@@ -198,7 +198,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               ],
             ),
             const ListToDoList(),
-            Divider(),
+            const Divider(),
             GestureDetector(
               onTap: () => _showCalendarChoices(context),
               child: Row(

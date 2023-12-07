@@ -15,9 +15,6 @@ class SettingsPage extends StatelessWidget {
         child: Column(
           children: [
             const Text("Settings Page"),
-            ElevatedButton(onPressed: () {
-              LocalStorage.deleteLocalFile("calendar1${LocalStorage.eventExtension}");
-            }, child: const Text("Remove event")),
           ],
         ),
       ),

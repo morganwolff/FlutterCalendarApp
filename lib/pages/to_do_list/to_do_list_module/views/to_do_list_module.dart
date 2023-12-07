@@ -134,16 +134,6 @@ class _AllToDoListsState extends State<AllToDoLists> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  ElevatedButton(
-                      onPressed: () {
-                        LocalStorage.deleteLocalFile(
-                            "personal${LocalStorage.eventExtension}");
-                        LocalStorage.deleteLocalFile(
-                            "chungang${LocalStorage.eventExtension}");
-                        LocalStorage.deleteLocalFile(
-                            "both${LocalStorage.eventExtension}");
-                      },
-                      child: const Text("Remove event")),
                   for (int i = 0;
                       i < provider.meetingsMap[provider.selectedCalendar]![widget.index].toDoLists.length;
                       i++)
