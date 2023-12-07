@@ -40,25 +40,18 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
-  void setupLocalization() async {
-    List? languages = await Devicelocale.preferredLanguages;
-    String? language = 'en';
-    if (languages?.first != null) {
-      language = languages?.first.toString().substring(0, 2);
-    }
+  void setupLocalization()  {
     _localization.init(mapLocales: [
       const MapLocale('fr', AppLocale.FR),
       const MapLocale('en', AppLocale.EN),
-    ], initLanguageCode: AppLocale.supportedLanguages.contains(language!)
-        ? language
-        : 'en');
+    ], initLanguageCode: 'en');
     _localization.onTranslatedLanguage = _onTranslatedLanguage;
   }
 
   @override
   void initState() {
-    super.initState();
     setupLocalization();
+    super.initState();
   }
 
 
@@ -67,7 +60,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       title: 'Calendar App',
       debugShowCheckedModeBanner: false,
-      locale: const Locale('en', 'US'),
+      locale: const Locale('en', 'EN'),
       supportedLocales: _localization.supportedLocales,
       localizationsDelegates: _localization.localizationsDelegates,
       theme: ThemeData(

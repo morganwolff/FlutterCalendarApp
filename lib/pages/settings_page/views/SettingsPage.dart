@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 
+import '../../../locals/app_locale.dart';
 import '../../../locals/local_storage.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -15,6 +17,13 @@ class SettingsPage extends StatelessWidget {
         child: Column(
           children: [
             const Text("Settings Page"),
+            ElevatedButton(onPressed: () {
+              if (AppLocale.currentLanguage.getString(context) == "en") {
+                FlutterLocalization.instance.translate("fr");
+              } else {
+                FlutterLocalization.instance.translate("en");
+              }
+            }, child: const Text("change language")),
           ],
         ),
       ),
