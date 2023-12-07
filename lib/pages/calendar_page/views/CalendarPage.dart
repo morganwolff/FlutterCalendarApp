@@ -30,10 +30,6 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.today),
-            onPressed: () {},
-          ),
-          IconButton(
             icon: const Icon(Icons.add),
             onPressed: () => _showBottomSheet(context),
           ),
@@ -44,10 +40,10 @@ class _CalendarPageState extends State<CalendarPage> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             const SizedBox(
-              height: 100,
+              height: 150,
               child: DrawerHeader(
                 decoration: BoxDecoration(color: Colors.blue),
-                child: Text('Flutter Calendar APP',
+                child: Text('Flutter Calendar',
                     style: TextStyle(color: Colors.white, fontSize: 24)),
               ),
             ),
