@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_calendar_app/Pages/models/LoginModel.dart';
-import 'package:flutter_calendar_app/Pages/views/Subscribe.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
 import '../viewmodels/LoginVewModel.dart';
+import 'Subscribe.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -100,7 +99,7 @@ class _LoginPage extends State<LoginPage> {
                         builder: (context) => SubscribePage(),
                       ),
                     );
-                    _userInfos.fetchData();
+//                    _userInfos.fetchData();
                     print('Student Id Number --> ${_userInfos.get_studentIdNumberController().text} / username --> ${_userInfos.get_usernameController().text}');
                   },
                   style: ButtonStyle(
