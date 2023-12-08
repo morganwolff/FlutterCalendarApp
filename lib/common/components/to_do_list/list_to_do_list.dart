@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/locals/app_locale.dart';
+import 'package:flutter_calendar_app/pages/to_do_list/create_to_do_list/viewmodels/create_to_do_list_provider.dart';
 import 'package:flutter_calendar_app/pages/to_do_list/create_to_do_list/views/create_to_do_list.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
 import 'package:flutter_localization/flutter_localization.dart';
@@ -8,14 +9,17 @@ import 'package:provider/provider.dart';
 
 
 class ToDoListName extends StatelessWidget {
-  const ToDoListName({super.key, required this.name, required this.index});
+  const ToDoListName({super.key, required this.name, required this.index, this.uuid});
 
   final int index;
 
   final String name;
 
+  final String? uuid;
+
   @override
   Widget build(BuildContext context) {
+    var provider = Provider.of<CalendarEventProvider>(context);
     return (
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -29,7 +33,9 @@ class ToDoListName extends StatelessWidget {
                   return CreateToDoList(index: index);
                 });
               }, icon: const Icon(Icons.edit)),
-              IconButton(onPressed: () {}, icon: const Icon(Icons.delete))
+              IconButton(onPressed: () {
+                provider.removeToDoListAt(index);
+              }, icon: const Icon(Icons.delete))
             ],
           )
         ],
@@ -39,7 +45,9 @@ class ToDoListName extends StatelessWidget {
 }
 
 class ListToDoList extends StatefulWidget {
-  const ListToDoList({super.key});
+  const ListToDoList({super.key, this.uuid});
+
+  final String? uuid;
 
   @override
   State<ListToDoList> createState() => _ListToDoListState();

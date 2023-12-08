@@ -39,6 +39,7 @@ class CreateToDoListProvider extends ChangeNotifier {
   }
 
   void addTask(ToDoTask newTask) {
+    print(newTask.toJson().toString());
     _tasks.add(newTask);
     notifyListeners();
   }

@@ -21,19 +21,29 @@ class _CreateToDoListState extends State<CreateToDoList> {
   final fieldText = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
-    var provider = Provider.of<CreateToDoListProvider>(context);
-    var providerCalendar = Provider.of<CalendarEventProvider>(context);
+  void initState() {
+    var providerCalendar = Provider.of<CalendarEventProvider>(context, listen: false);
+    var provider = Provider.of<CreateToDoListProvider>(context, listen: false);
     if (widget.index > -1) {
       provider.setTasks(providerCalendar.toDoLists[widget.index].toDoList);
       provider.setTitle(providerCalendar.toDoLists[widget.index].name, false);
+    } else {
+      provider.setTasks([]);
+      provider.setTitle("", false);
     }
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var provider = Provider.of<CreateToDoListProvider>(context);
+    var providerCalendar = Provider.of<CalendarEventProvider>(context);
     return (Material(
       color: Colors.transparent,
       child: Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.background,
+            borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(30), topRight: Radius.circular(30)),
           ),
           child: SingleChildScrollView(
@@ -49,7 +59,7 @@ class _CreateToDoListState extends State<CreateToDoList> {
                         onPressed: () {
                           Navigator.pop(context);
                         }),
-                      Text(AppLocale.addToDoList.getString(context),
+                      Text(widget.index > -1 ? AppLocale.modifyToDoList.getString(context): AppLocale.addToDoList.getString(context),
                         style:
                         const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                     TextButton(
