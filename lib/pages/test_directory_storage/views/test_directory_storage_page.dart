@@ -4,6 +4,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/locals/cache.dart';
 import 'package:flutter_calendar_app/locals/local_storage.dart';
+import 'package:flutter_calendar_app/pages/calendar_page/models/MeetingModel.dart';
+import 'package:flutter_calendar_app/pages/to_do_list/models/to_do_task.dart';
+
+import '../../to_do_list/models/to_do_list_model.dart';
 
 class TestDirectoryStorage extends StatefulWidget {
   const TestDirectoryStorage({super.key});
@@ -31,7 +35,6 @@ class _TestDirectoryStorageState extends State<TestDirectoryStorage> {
             return Column(
               children: [
                 ElevatedButton(onPressed: () {
-                  LocalStorage.writeEventsToFile([const CalendarEvent(nb: 10, name: "pixy")], "pixy1");
                   setState(() {});
                 }, child: const Text("Add event")),
                 ElevatedButton(onPressed: () {

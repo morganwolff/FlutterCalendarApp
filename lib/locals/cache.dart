@@ -13,6 +13,9 @@ class Cache {
   static const String startDay = "startDay"; //int
   static const String startDayTimeStamp = "startDayTimeStamp";
 
+  static const String darkMode = "darkMode"; //int
+  static const String darkModeTimeStamp = "darkModeTimeStamp";
+
   static const int cacheDurationInMinutes = 60 * 60000;
 
   static Future<String?> getStringFromCache(String key, String keyTimeStamp) async {

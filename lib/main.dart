@@ -1,7 +1,4 @@
 
-import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:devicelocale/devicelocale.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/Pages/login_page/views/Login.dart';
@@ -10,24 +7,30 @@ import 'package:flutter_calendar_app/firebase_options.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'Pages/login_page/models/UserInformationModel.dart';
 import 'locals/app_locale.dart';
-import 'locals/local_storage.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
+import 'package:flutter_calendar_app/pages/to_do_list/create_to_do_list/viewmodels/create_to_do_list_provider.dart';
+import 'common/components/TabBarNavigation.dart';
+import 'components/themes.dart';
 
 
 void main() async {
 
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-
+   WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  
   runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => UserInformationModel()),
-      ],
-      child: MyApp(),
-    ),
+      MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => CalendarEventProvider()),
+            ChangeNotifierProvider(create: (_) => CreateToDoListProvider()),
+            ChangeNotifierProvider(create: (_) => ThemeProvider()),
+            ChangeNotifierProvider(create: (_) => UserInformationModel()),
+          ],
+          child: const MyApp(),
+      )
   );
 }
 
@@ -46,46 +49,42 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
-  void setupLocalization() async {
-    List? languages = await Devicelocale.preferredLanguages;
-    String? language = 'en';
-    if (languages?.first != null) {
-      language = languages?.first.toString().substring(0, 2);
-    }
+  void setupLocalization()  {
     _localization.init(mapLocales: [
       const MapLocale('fr', AppLocale.FR),
       const MapLocale('en', AppLocale.EN),
-    ], initLanguageCode: AppLocale.supportedLanguages.contains(language!)
-        ? language
-        : 'en');
+      const MapLocale('es', AppLocale.ES),
+      const MapLocale('kr', AppLocale.KR),
+    ], initLanguageCode: 'en');
     _localization.onTranslatedLanguage = _onTranslatedLanguage;
   }
 
   @override
   void initState() {
-    super.initState();
     setupLocalization();
+    super.initState();
   }
 
 
   @override
   Widget build(BuildContext context) {
-
+    final themeProvider = Provider.of<ThemeProvider>(context);
+    themeProvider.initDarkMode();
     return MaterialApp(
       title: 'Calendar App',
-      locale: const Locale('en', 'US'),
+      debugShowCheckedModeBanner: false,
+      locale: const Locale('en', 'EN'),
       supportedLocales: _localization.supportedLocales,
       localizationsDelegates: _localization.localizationsDelegates,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: themeProvider.isDarkMode
+          ? ThemeData.dark()
+          : ThemeData.light(),
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
 
           if (snapshot.hasData) {
-            return const  MyHomePage();
+            return const  TabBarPage();
           }
           else {
             return const LoginPage();
@@ -156,11 +155,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
             Text(AppLocale.currentLanguage.getString(context)),
             ElevatedButton(onPressed: () {
-              final List<CalendarEvent> test = [
-                const CalendarEvent(nb: 11, name: "pixy"),
-                const CalendarEvent(nb: 32, name: "cipher")
-              ];
-              print(jsonEncode(test));
               setState(() {
                 if (AppLocale.currentLanguage.getString(context) == "en") {
                   FlutterLocalization.instance.translate("fr");
