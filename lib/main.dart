@@ -126,7 +126,7 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(onPressed: ()
           {
             FirebaseAuth.instance.signOut();
-          }, icon: Icon(Icons.logout)),
+          }, icon: const Icon(Icons.logout)),
         ],
       ),
       body: Center(

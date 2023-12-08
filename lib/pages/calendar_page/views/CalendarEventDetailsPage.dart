@@ -25,6 +25,9 @@ class EventDetailsPage extends StatelessWidget {
       return Scaffold(
         appBar: AppBar(
           actions: <Widget>[
+            if (!provider.meetingsMap[provider
+                .selectedCalendar]![indexes[provider
+                .selectedCalendar]!].chungAng)
             IconButton(
               icon: const Icon(Icons.edit_outlined),
               onPressed: () {
@@ -36,6 +39,9 @@ class EventDetailsPage extends StatelessWidget {
                 );
               },
             ),
+            if (!provider.meetingsMap[provider
+                .selectedCalendar]![indexes[provider
+                .selectedCalendar]!].chungAng)
             IconButton(
               icon: const Icon(Icons.delete_outline),
               onPressed: () {

@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_calendar_app/locals/app_locale.dart';
 
+import '../../../locals/cache.dart';
+
 class UserInfosViewModel {
 
   UserInfosModel _userInfosModel = new UserInfosModel();
@@ -62,6 +64,9 @@ class UserInfosViewModel {
 
       _userInfosModel.username = document['username'];
       _userInfosModel.student_id = document['student_id'];
+      await Cache.setStringInCache(Cache.studentId, Cache.studentIdTimeStamp, document['student_id']);
+      await Cache.setStringInCache(Cache.username, Cache.usernameTimeStamp, document['username']);
+
       // Function that filled the variable planningCau in UserInfosModel
       await fetchData(document['student_id']);
 
