@@ -249,7 +249,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
             child: Column(
               children: [
                 CheckboxListTile(
-                  title: const Text("Chung Ang"),
+                  title: Text(AppLocale.chungang.getString(context)),
                   value: selectedCalendar == "Chung Ang",
                   onChanged: (bool? value) {
                     if (value == true) {
@@ -262,7 +262,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                   },
                 ),
                 CheckboxListTile(
-                  title: const Text("Personal"),
+                  title: Text(AppLocale.personal.getString(context)),
                   value: selectedCalendar == "Personal",
                   onChanged: (bool? value) {
                     if (value == true) {
