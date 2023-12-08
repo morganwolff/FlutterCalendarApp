@@ -19,6 +19,7 @@ mixin AppLocale {
   static const String username = "Username";
   static const String sign_up = "Sign up";
   static const String confirm_id = "Confirm Student ID";
+  static const String email = "E-mail";
   static const String password = "Password";
   static const String return_login = "Return to Login";
   static const String not_matching = "Student IDs do not match.";
@@ -92,6 +93,7 @@ mixin AppLocale {
     username: "Username",
     sign_up: "Sign Up",
     confirm_id: "Confirm Student ID",
+    email: "Email",
     password: "Password",
     return_login: "Return to Login",
     not_matching: "Student IDs do not match.",
@@ -164,6 +166,7 @@ mixin AppLocale {
     username: "Nom d'utilisateur",
     sign_up: "S'inscrire",
     confirm_id: "Confirmer Nº d'identification de l'étudiant",
+    email: "E-mail",
     password: "Mot de passe",
     return_login: "Retour à la connexion",
     not_matching: "Les cartes d'identité des étudiants ne correspondent pas.",
@@ -229,6 +232,7 @@ mixin AppLocale {
     username: "Nombre de usuario",
     sign_up: "Registrarse",
     confirm_id: "Confirmar Número de Identificación del Estudiante",
+    email: "Correo electrónico",
     password: "Contraseña",
     return_login: "Volver al inicio de sesión",
     not_matching: "Los números de identificación del estudiante no coinciden.",
@@ -301,6 +305,7 @@ mixin AppLocale {
     username: "사용자 이름",
     sign_up: "가입하기",
     confirm_id: "학생 ID 확인",
+    email: "이메일",
     password: "비밀번호",
     return_login: "로그인으로 돌아가기",
     not_matching: "학생 ID가 일치하지 않습니다.",

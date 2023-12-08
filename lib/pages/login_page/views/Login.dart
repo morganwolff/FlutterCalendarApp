@@ -2,47 +2,42 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/components/textFieldLoginSubscribe.dart';
 import 'package:flutter_calendar_app/main.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import '../viewmodels/LoginVewModel.dart';
 import '../models/UserInformationModel.dart';
 import '../../subscribe_page/views/Subscribe.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_calendar_app/locals/app_locale.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
-
 
   @override
   State<LoginPage> createState() => _LoginPage();
 }
 
 class _LoginPage extends State<LoginPage> {
-
   UserInfosViewModel _userInfos = new UserInfosViewModel();
 
   final _authentication = FirebaseAuth.instance;
   final _formKey = GlobalKey<FormState>();
 
-
   @override
   Widget build(BuildContext context) {
+    final _userInfosProvider =
+        Provider.of<UserInformationModel>(context, listen: false);
 
-    final _userInfosProvider = Provider.of<UserInformationModel>(context, listen: false);
-
-    return  Scaffold(
+    return Scaffold(
         body: Form(
             key: _formKey,
             child: Column(
               children: [
-
-                //Logo
                 SizedBox(height: 70),
                 Image.asset(
                   'assets/LogoCAU2.png',
                   width: 180,
                   height: 180,
                 ),
-
-                //Logo
                 SizedBox(height: 25),
                 Icon(
                   Icons.lock_open,
@@ -50,53 +45,37 @@ class _LoginPage extends State<LoginPage> {
                   size: 25.0,
                   semanticLabel: 'Text to announce in accessibility modes',
                 ),
-
-                //Title
                 SizedBox(height: 20),
                 Text(
-                  "CONNECTION",
+                  AppLocale.connection.getString(context),
                   style: TextStyle(
                       color: Colors.black,
                       fontWeight: FontWeight.bold,
-                      fontSize: 20
-                  ),
+                      fontSize: 20),
                 ),
-
-                //Description
                 SizedBox(height: 5),
                 Text(
-                  "WELCOME BACK TO YOUR CALENDAR",
-                  style: TextStyle(
-                      color: Colors.grey[700],
-                      fontSize: 15
-                  ),
+                  AppLocale.welcome_back.getString(context),
+                  style: TextStyle(color: Colors.grey[700], fontSize: 15),
                 ),
                 SizedBox(height: 35),
-
-                // e-mail textfield
                 TextFieldLoginSubscribe(
                   controller: _userInfos.set_emailController(),
-                  hintText: "E-mail",
+                  hintText: AppLocale.email.getString(context),
                   obscureText: false,
                   numberKeyBoard: false,
                 ),
                 SizedBox(height: 30),
-
-                // password textfield
                 TextFieldLoginSubscribe(
                   controller: _userInfos.set_passwordController(),
-                  hintText: "Password",
+                  hintText: AppLocale.password.getString(context),
                   obscureText: true,
                   numberKeyBoard: false,
                 ),
-
-                // Sign in button with Chung-Ang University Logo
                 SizedBox(height: 30),
-
                 ElevatedButton(
                   onPressed: () async {
-
-                    if (await _userInfos.validateValue()) {
+                    if (await _userInfos.validateValue(context)) {
                       showDialog(
                         context: context,
                         builder: (BuildContext context) {
@@ -115,35 +94,24 @@ class _LoginPage extends State<LoginPage> {
                         },
                       );
                     } else {
-
                       try {
-
-
-
-                        // This function fill _userInfos.get_username() / _userInfos.get_student_id() / _userInfos.get_planningWeekCau()
-                        if (await _userInfos.get_user_data_firebase(_userInfos.get_emailController().text)) {
-
-                          _userInfosProvider.set_username(
-                              _userInfos.get_username());
-                          _userInfosProvider.set_student_id(
-                              _userInfos.get_student_id());
+                        if (await _userInfos.get_user_data_firebase(
+                            _userInfos.get_emailController().text)) {
+                          _userInfosProvider
+                              .set_username(_userInfos.get_username());
+                          _userInfosProvider
+                              .set_student_id(_userInfos.get_student_id());
                           _userInfosProvider.set_planningCau(
                               _userInfos.get_planningWeekCau());
-
-                          final currentUser = await _authentication
-                              .signInWithEmailAndPassword(
-                              email: _userInfos
-                                  .get_emailController()
-                                  .text, password: _userInfos
-                              .get_passwordController()
-                              .text);
-
+                          final currentUser =
+                              await _authentication.signInWithEmailAndPassword(
+                                  email: _userInfos.get_emailController().text,
+                                  password:
+                                      _userInfos.get_passwordController().text);
                           if (currentUser.user != null) {
                             _formKey.currentState!.reset();
                           }
-                        }
-
-                        else {
+                        } else {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
@@ -162,28 +130,27 @@ class _LoginPage extends State<LoginPage> {
                             },
                           );
                         }
-
-                      } catch(e) {
-                        print (e);
+                      } catch (e) {
+                        print(e);
                       }
                     }
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all<Color>(Colors.black),
+                    backgroundColor:
+                        MaterialStateProperty.all<Color>(Colors.black),
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5.0), // Adjust the radius as needed
+                        borderRadius: BorderRadius.circular(
+                            5.0), // Adjust the radius as needed
                       ),
                     ),
                   ),
                   child: Text(
-                    "Sign In",
+                    AppLocale.sign_in.getString(context),
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-
                 SizedBox(height: 15),
-
                 GestureDetector(
                   onTap: () {
                     Navigator.push(
@@ -194,7 +161,7 @@ class _LoginPage extends State<LoginPage> {
                     );
                   },
                   child: Text(
-                    'Subscribe first',
+                    AppLocale.sign_up_first.getString(context),
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[700],
@@ -203,11 +170,6 @@ class _LoginPage extends State<LoginPage> {
                   ),
                 ),
               ],
-            )
-
-        )
-
-    );
+            )));
   }
 }
-
