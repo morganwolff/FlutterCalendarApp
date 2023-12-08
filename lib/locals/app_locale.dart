@@ -10,6 +10,7 @@ mixin AppLocale {
   static const String welcome = "welcome";
   static const String toDoLists = "toDoLists";
   static const String addToDoList = "addToDoList";
+  static const String modifyToDoList = "modifyToDoList";
   static const String save = "save";
   static const String task = "task";
   static const String newElement = "newElement";
@@ -77,6 +78,7 @@ mixin AppLocale {
     welcome: "Welcome",
     toDoLists: "ToDo Lists",
     addToDoList: "Add a ToDo List",
+    modifyToDoList: "Modify a ToDo List",
     task: "Task",
     newElement: "New element",
     add: "Add",
@@ -147,6 +149,7 @@ mixin AppLocale {
     welcome: "Bienvenue",
     toDoLists: "Listes ToDo",
     addToDoList: "Ajouter une Liste ToDo",
+    modifyToDoList: "Modifier une Liste",
     save: "Enregistrer",
     task: "Tâche",
     newElement: "Nouvel élément",
@@ -227,6 +230,7 @@ mixin AppLocale {
     empty_id: "El número de identificación del estudiante está vacío.",
     toDoLists: "Listas de Tareas",
     addToDoList: "Agregar una Lista de Tareas",
+    modifyToDoList: "Modificar una lista de tareas",
     task: "Tarea",
     newElement: "Nuevo Elemento",
     add: "Agregar",
@@ -295,6 +299,7 @@ mixin AppLocale {
     empty_id: "학생 ID 번호가 비어 있습니다.",
     toDoLists: "할일 목록",
     addToDoList: "할일 목록 추가",
+    modifyToDoList: "할일 목록 수정",
     task: "작업",
     newElement: "새로운 항목",
     add: "추가",

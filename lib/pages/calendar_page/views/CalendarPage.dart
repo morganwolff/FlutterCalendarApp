@@ -18,6 +18,14 @@ class CalendarPage extends StatefulWidget {
 class _CalendarPageState extends State<CalendarPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late MeetingDataSource meetingDataSource;
+  late Future<bool> _done;
+
+  @override
+  void initState() {
+    var provider = Provider.of<CalendarEventProvider>(context, listen: false);
+    _done = provider.getEvents(context);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -106,7 +114,7 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
       ),
       body: FutureBuilder<bool>(
-        future: provider.getEvents(context),
+        future: _done,
         builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
           if (snapshot.hasData) {
             return SfCalendar(

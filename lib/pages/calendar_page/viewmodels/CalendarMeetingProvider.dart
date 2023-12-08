@@ -232,6 +232,7 @@ class CalendarEventProvider with ChangeNotifier {
     print(apiRes.toString());
     print(_meetingsMap["chungang"]!.length);
     if (_meetingsMap["chungang"]!.isEmpty) {
+      print("J'ADDD CHUNGANG");
       List<List<ChungAngClassModel>> schedule = [];
       List<ChungAngClassModel> tmp = [];
       for (var day in apiRes) {
@@ -414,6 +415,11 @@ class CalendarEventProvider with ChangeNotifier {
 
   void replaceToDoList(ToDoListModel list, int index) {
     _toDoLists[index] = list;
+    notifyListeners();
+  }
+
+  void removeToDoListAt(int index) {
+    _toDoLists.removeAt(index);
     notifyListeners();
   }
 

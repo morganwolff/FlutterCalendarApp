@@ -22,6 +22,9 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
     if (widget.meetingUuid != null) {
       var provider = Provider.of<CalendarEventProvider>(context, listen: false);
       provider.loadMeetingData(widget.meetingUuid!);
+    } else {
+      var provider = Provider.of<CalendarEventProvider>(context, listen: false);
+      provider.resetEventVariables();
     }
   }
 
@@ -98,7 +101,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                 ..selection = TextSelection.fromPosition(TextPosition(offset: provider.title.length)),
               decoration: InputDecoration(
                 labelText: AppLocale.title.getString(context),
-                border: OutlineInputBorder(),
+                border: const OutlineInputBorder(),
               ),
               onChanged: (value) => setState(() => provider.setTitle(value)),
             ),
@@ -214,7 +217,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                 ),
               ],
             ),
-            const ListToDoList(),
+            ListToDoList(uuid: widget.meetingUuid,),
             const Divider(),
             GestureDetector(
               onTap: () => _showCalendarChoices(context),
