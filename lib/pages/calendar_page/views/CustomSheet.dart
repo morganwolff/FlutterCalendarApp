@@ -76,9 +76,9 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                       provider.resetEventVariables();
                       Navigator.pop(context);
                     }),
-                const Text("New Event",
+                Text(AppLocale.new_event.getString(context),
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 TextButton(
                   onPressed: () {
                     if (widget.meetingUuid == null) {
@@ -89,26 +89,26 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                     provider.resetEventVariables();
                     Navigator.pop(context);
                   },
-                  child: const Text("Save"),
+                  child: Text(AppLocale.save.getString(context)),
                 ),
               ],
             ),
             TextField(
-              controller: TextEditingController(text: provider.title) // Initialisez avec la valeur du provider
-                ..selection = TextSelection.fromPosition(TextPosition(offset: provider.title.length)), // Placez le curseur à la fin du texte
-              decoration: const InputDecoration(
-                labelText: 'Titre',
+              controller: TextEditingController(text: provider.title)
+                ..selection = TextSelection.fromPosition(TextPosition(offset: provider.title.length)),
+              decoration: InputDecoration(
+                labelText: AppLocale.title.getString(context),
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) => setState(() => provider.setTitle(value)),
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: TextEditingController(text: provider.description) // Initialisez avec la valeur du provider
-                ..selection = TextSelection.fromPosition(TextPosition(offset: provider.description.length)), // Placez le curseur à la fin du texte
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                border: OutlineInputBorder(),
+              controller: TextEditingController(text: provider.description)
+                ..selection = TextSelection.fromPosition(TextPosition(offset: provider.description.length)),
+              decoration: InputDecoration(
+                labelText: AppLocale.description.getString(context),
+                border: const OutlineInputBorder(),
               ),
               keyboardType: TextInputType.multiline,
               minLines: 2,
@@ -120,7 +120,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
             const SizedBox(height: 20),
             const Divider(),
             SwitchListTile(
-              title: const Text('All day event'),
+              title: Text(AppLocale.a_d_event.getString(context)),
               value: provider.isAllDay,
               onChanged: (bool value) {
                 setState(() {
@@ -133,7 +133,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               padding: const EdgeInsets.only(left: 50, right: 50),
               child: Column(
                 children: [
-                  const Text("Start"),
+                  Text(AppLocale.start.getString(context)),
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -164,7 +164,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               padding: const EdgeInsets.only(left: 50, right: 50),
               child: Column(
                 children: [
-                  const Text("End"),
+                  Text(AppLocale.end.getString(context)),
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -199,7 +199,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const Text('Choose Color'),
+                      Text(AppLocale.choose_color.getString(context)),
                       ColoredBox(
                         color: provider.eventColor,
                         child: const SizedBox(height: 30, width: 30),
@@ -221,7 +221,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Text('Add to calendar'),
+                  Text(AppLocale.add_to_calendar.getString(context)),
                   Text(provider.chungAngCalendar ? "Chung Ang" : "Personal",
                       style:
                           TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),

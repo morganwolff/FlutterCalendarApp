@@ -42,9 +42,8 @@ mixin AppLocale {
   static const String start = "Start";
   static const String end = "End";
   static const String choose_color = "Choose color";
-  static const String color = "Color";
-  static const String name = "Name";
   static const String confirm = "Confirm";
+  static const String add_to_calendar = "Add to calendar";
   static const String pink = "Pink";
   static const String red = "Red";
   static const String orange = "Orange";
@@ -54,7 +53,6 @@ mixin AppLocale {
   static const String grey = "Grey";
   static const String purple = "Purple";
   static const String default_color = "Default color";
-
   static const String go_back = "Go back to settings";
   static const String select_lang = "select a language: ";
   static const String log_in = "Log in to Chung Ang";
@@ -109,9 +107,8 @@ mixin AppLocale {
     start: "Start",
     end: "End",
     choose_color: "Choose color",
-    color: "Color",
-    name: "Name",
     confirm: "Confirm",
+    add_to_calendar: "Add to calendar",
     pink: 'Pink',
     red: 'Red',
     orange: 'Orange',
@@ -175,12 +172,11 @@ mixin AppLocale {
     new_event: "Nouvel évènement",
     description: "Description",
     a_d_event: "Événement d'une journée",
-    start:"Commencer",
+    start:"Début",
     end: "Fin",
     choose_color: "Choisir la couleur",
-    color:"Couleur",
-    name:"Nom",
     confirm: "Confirmer",
+    add_to_calendar: "Ajouter au calendrier",
     pink: 'Rose',
     red: 'Rouge',
     orange: 'Orange',
@@ -241,9 +237,8 @@ mixin AppLocale {
     start: "Inicio",
     end: "Fin",
     choose_color: "Elegir color",
-    color: "Color",
-    name: "Nombre",
     confirm: "Confirmar",
+    add_to_calendar: "Añadir al calendario",
     pink: 'Rosa',
     red: 'Rojo',
     orange: 'Naranja',
@@ -303,9 +298,8 @@ mixin AppLocale {
     start: "시작",
     end: "종료",
     choose_color: "색상 선택",
-    color: "색상",
-    name: "이름",
     confirm: "확인",
+    add_to_calendar: "캘린더에 추가",
     pink: '분홍',
     red: '빨강',
     orange: '주황',
