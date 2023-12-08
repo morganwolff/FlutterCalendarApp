@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "815525832781",
+    "project_id": "calendar-app-16b44",
+    "storage_bucket": "calendar-app-16b44.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:815525832781:android:acca47bfa4a42d4c8b5404",
+        "android_client_info": {
+          "package_name": "com.example.flutter_calendar_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMxOZOV0-45s7Volf5c9nD7Wld8C7z7XM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

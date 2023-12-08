@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'CalendarEventDetailsPage.dart';
 import 'CustomSheet.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class CalendarPage extends StatefulWidget {
   const CalendarPage({super.key});
@@ -43,7 +44,12 @@ class _CalendarPageState extends State<CalendarPage> {
             icon: const Icon(Icons.add),
             onPressed: () => _showBottomSheet(context),
           ),
+          IconButton(onPressed: ()
+          {
+            FirebaseAuth.instance.signOut();
+          }, icon: Icon(Icons.logout)),
         ],
+
       ),
       drawer: Drawer(
         child: ListView(

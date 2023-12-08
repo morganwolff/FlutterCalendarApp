@@ -1,35 +1,79 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/Pages/login_page/models/LoginModel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
-import '../models/LoginModel.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserInfosViewModel {
 
   UserInfosModel _userInfosModel = new UserInfosModel();
 
   /////////////////// ID NUMBER USER  ///////////////////
-  TextEditingController get_studentIdNumberController() {
-    return _userInfosModel.studentIdNumberController;
+  TextEditingController get_emailController() {
+    return _userInfosModel.emailController;
   }
 
-  TextEditingController set_studentIdNumberController() {
-    return _userInfosModel.studentIdNumberController;
+  TextEditingController set_emailController() {
+    return _userInfosModel.emailController;
   }
 
-  /////////////////// USERNAME  ///////////////////
-  TextEditingController get_usernameController() {
-    return _userInfosModel.usernameController;
+  /////////////////// PASSWORD  ///////////////////
+  TextEditingController get_passwordController() {
+    return _userInfosModel.passwordController;
   }
 
-  TextEditingController set_usernameController() {
-    return _userInfosModel.usernameController;
+  TextEditingController set_passwordController() {
+    return _userInfosModel.passwordController;
   }
 
-  List<dynamic> getUserCAUPlanning() {
+
+
+  /////////////////// Get/Set PlanningCau  ///////////////////
+  String get_title() {
+    return _userInfosModel.titleDialog;
+  }
+
+  String get_errorMessage() {
+    return _userInfosModel.errorMessageDialog;
+  }
+
+  /////////////////// PlanningCau  ///////////////////
+  List get_planningWeekCau() {
     return _userInfosModel.planningCau;
   }
 
+  /////////////////// Get/Set PlanningCau  ///////////////////
+  String get_username() {
+    return _userInfosModel.username;
+  }
+
+  /////////////////// Get/Set Title/ErrorMessage  ///////////////////
+
+  String get_student_id() {
+    return _userInfosModel.student_id;
+  }
+
+  /////////////////// GET DATA FIRESTORE  ///////////////////
+  Future<bool> get_user_data_firebase(String _email) async {
+    final CollectionReference users = FirebaseFirestore.instance.collection('users');
+
+
+    QuerySnapshot querySnapshot = await users.where('email', isEqualTo: _email).get();
+    if (querySnapshot.docs.isNotEmpty) {
+      var document = querySnapshot.docs.first;
+
+      _userInfosModel.username = document['username'];
+      _userInfosModel.student_id = document['student_id'];
+      // Function that filled the variable planningCau in UserInfosModel
+      await fetchData(document['student_id']);
+
+      return true;
+
+    } else {
+
+      return false;
+    }
+  }
   /////////////////// TRANSLATE TIME  ///////////////////
   String translateEnglishTime (String time) {
 
@@ -54,12 +98,12 @@ class UserInfosViewModel {
     // Check if the map contains the key
     if (timePm.containsKey(checkTimeInMap)) {
 
-      var newTime = "${timePm[checkTimeInMap]!}${time[2]}${time[3]}${time[4]} pm";
+      var newTime = timePm[checkTimeInMap]! + time[2] + time[3] + time[4] + " pm";
       return newTime.toString();
 
     } else {
 
-      return "$time am"; // Or handle the case as needed
+      return time + " am"; // Or handle the case as needed
 
     }
   }
@@ -152,7 +196,33 @@ class UserInfosViewModel {
 
   }
 
+  /////////////////// Validate Information TextFormField ////////////////////
+  Future<bool> validateValue() async {
 
+    String email = _userInfosModel.emailController.toString();
+    int startIndex = email.indexOf('┤');
+    int endIndex = email.indexOf('├', 1);
+
+    if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
+      email = email.substring(startIndex + 1, endIndex);
+    }
+
+    if (RegExp(r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(email) == false) {
+      _userInfosModel.titleDialog = "ERROR: E-mail";
+      _userInfosModel.errorMessageDialog = "Enter a valid e-mail format.";
+      return (true);
+    }
+
+    ////// Check password length //////
+    if (_userInfosModel.passwordController.toString().length < 205) {
+      _userInfosModel.titleDialog = "ERROR: Password";
+      _userInfosModel.errorMessageDialog = "Your password must provide at least 4 characters.";
+      return (true);
+    }
+
+    return (false);
+  }
 
   /////////////////// GET DATA PLANNING OF CHUNG ANG UNIVERSITY  ///////////////////
   Future<void> fetchData(String _studentId) async {
@@ -171,11 +241,13 @@ class UserInfosViewModel {
         body: jsonEncode(requestBody),
       );
 
+
       if (response.statusCode == 200) {
         List<Map<String, dynamic>> scheduleData = (json.decode(response.body.toString()) as List<dynamic>)
             .cast<Map<String, dynamic>>();
 
         _userInfosModel.planningCau = dayPlanningList(0, "", scheduleData, []);
+
       } else {
         // If the server did not return a 200 OK response,
         // throw an exception or handle the error based on your use case
