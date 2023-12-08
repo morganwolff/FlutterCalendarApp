@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/common/components/to_do_list/list_to_do_list.dart';
+import 'package:flutter_calendar_app/locals/app_locale.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +25,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
     }
   }
 
-  final List<Map<String, dynamic>> colorOptions = [
+  List<Map<String, dynamic>> colorOptions = [
     {"color": Colors.deepPurpleAccent, "name": "Purple"},
     {"color": Colors.pinkAccent, "name": "Pink"},
     {"color": Colors.red, "name": "Red"},
@@ -35,14 +37,29 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
     {"color": Colors.blue, "name": "Default Color"},
   ];
 
+  void createColorOption(BuildContext context) {
+    colorOptions = [
+      {"color": Colors.deepPurpleAccent, "name": AppLocale.purple.getString(context)},
+      {"color": Colors.pinkAccent, "name": AppLocale.pink.getString(context)},
+      {"color": Colors.red, "name": AppLocale.red.getString(context)},
+      {"color": Colors.orange, "name": AppLocale.orange.getString(context)},
+      {"color": Colors.yellowAccent, "name": AppLocale.yellow.getString(context)},
+      {"color": Colors.greenAccent, "name": AppLocale.lightGreen.getString(context)},
+      {"color": Colors.green, "name": AppLocale.green.getString(context)},
+      {"color": Colors.blueGrey, "name": AppLocale.grey.getString(context)},
+      {"color": Colors.blue, "name": AppLocale.default_color.getString(context)},
+    ];
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    return DateFormat('MM/dd/yyyy hh:mm a').format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     double bottomSheetHeight = MediaQuery.of(context).size.height * 0.8;
     var provider = Provider.of<CalendarEventProvider>(context);
-
-    String formatDateTime(DateTime dateTime) {
-      return DateFormat('MM/dd/yyyy hh:mm a').format(dateTime);
-    }
+    createColorOption(context);
 
     return Container(
       height: bottomSheetHeight,
@@ -59,9 +76,9 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                       provider.resetEventVariables();
                       Navigator.pop(context);
                     }),
-                const Text("New Event",
+                Text(AppLocale.new_event.getString(context),
                     style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                 TextButton(
                   onPressed: () {
                     if (widget.meetingUuid == null) {
@@ -72,26 +89,26 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                     provider.resetEventVariables();
                     Navigator.pop(context);
                   },
-                  child: const Text("Save"),
+                  child: Text(AppLocale.save.getString(context)),
                 ),
               ],
             ),
             TextField(
-              controller: TextEditingController(text: provider.title) // Initialisez avec la valeur du provider
-                ..selection = TextSelection.fromPosition(TextPosition(offset: provider.title.length)), // Placez le curseur à la fin du texte
-              decoration: const InputDecoration(
-                labelText: 'Titre',
+              controller: TextEditingController(text: provider.title)
+                ..selection = TextSelection.fromPosition(TextPosition(offset: provider.title.length)),
+              decoration: InputDecoration(
+                labelText: AppLocale.title.getString(context),
                 border: OutlineInputBorder(),
               ),
               onChanged: (value) => setState(() => provider.setTitle(value)),
             ),
             const SizedBox(height: 20),
             TextField(
-              controller: TextEditingController(text: provider.description) // Initialisez avec la valeur du provider
-                ..selection = TextSelection.fromPosition(TextPosition(offset: provider.description.length)), // Placez le curseur à la fin du texte
-              decoration: const InputDecoration(
-                labelText: 'Description',
-                border: OutlineInputBorder(),
+              controller: TextEditingController(text: provider.description)
+                ..selection = TextSelection.fromPosition(TextPosition(offset: provider.description.length)),
+              decoration: InputDecoration(
+                labelText: AppLocale.description.getString(context),
+                border: const OutlineInputBorder(),
               ),
               keyboardType: TextInputType.multiline,
               minLines: 2,
@@ -103,7 +120,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
             const SizedBox(height: 20),
             const Divider(),
             SwitchListTile(
-              title: const Text('All day event'),
+              title: Text(AppLocale.a_d_event.getString(context)),
               value: provider.isAllDay,
               onChanged: (bool value) {
                 setState(() {
@@ -116,7 +133,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               padding: const EdgeInsets.only(left: 50, right: 50),
               child: Column(
                 children: [
-                  const Text("Start"),
+                  Text(AppLocale.start.getString(context)),
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -147,7 +164,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               padding: const EdgeInsets.only(left: 50, right: 50),
               child: Column(
                 children: [
-                  const Text("End"),
+                  Text(AppLocale.end.getString(context)),
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
@@ -182,7 +199,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      const Text('Choose Color'),
+                      Text(AppLocale.choose_color.getString(context)),
                       ColoredBox(
                         color: provider.eventColor,
                         child: const SizedBox(height: 30, width: 30),
@@ -204,10 +221,10 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  const Text('Add to calendar'),
-                  Text(provider.chungAngCalendar ? "Chung Ang" : "Personal",
+                  Text(AppLocale.add_to_calendar.getString(context)),
+                  Text(provider.chungAngCalendar ? AppLocale.chungang.getString(context) : AppLocale.personal.getString(context),
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                          const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
@@ -232,7 +249,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
             child: Column(
               children: [
                 CheckboxListTile(
-                  title: const Text("Chung Ang"),
+                  title: Text(AppLocale.chungang.getString(context)),
                   value: selectedCalendar == "Chung Ang",
                   onChanged: (bool? value) {
                     if (value == true) {
@@ -245,7 +262,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                   },
                 ),
                 CheckboxListTile(
-                  title: const Text("Personal"),
+                  title: Text(AppLocale.personal.getString(context)),
                   value: selectedCalendar == "Personal",
                   onChanged: (bool? value) {
                     if (value == true) {

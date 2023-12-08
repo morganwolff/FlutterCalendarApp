@@ -1,16 +1,11 @@
-import 'dart:convert';
-import 'package:devicelocale/devicelocale.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
-import 'package:flutter_calendar_app/pages/test_directory_storage/views/test_directory_storage_page.dart';
 import 'package:flutter_calendar_app/pages/to_do_list/create_to_do_list/viewmodels/create_to_do_list_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:provider/provider.dart';
 
 import 'common/components/TabBarNavigation.dart';
 import 'locals/app_locale.dart';
-import 'locals/local_storage.dart';
 
 
 void main() {
@@ -44,6 +39,8 @@ class _MyAppState extends State<MyApp> {
     _localization.init(mapLocales: [
       const MapLocale('fr', AppLocale.FR),
       const MapLocale('en', AppLocale.EN),
+      const MapLocale('es', AppLocale.ES),
+      const MapLocale('kr', AppLocale.KR),
     ], initLanguageCode: 'en');
     _localization.onTranslatedLanguage = _onTranslatedLanguage;
   }
