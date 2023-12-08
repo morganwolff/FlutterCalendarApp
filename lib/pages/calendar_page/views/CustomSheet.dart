@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/common/components/to_do_list/list_to_do_list.dart';
+import 'package:flutter_calendar_app/locals/app_locale.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -23,7 +25,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
     }
   }
 
-  final List<Map<String, dynamic>> colorOptions = [
+  List<Map<String, dynamic>> colorOptions = [
     {"color": Colors.deepPurpleAccent, "name": "Purple"},
     {"color": Colors.pinkAccent, "name": "Pink"},
     {"color": Colors.red, "name": "Red"},
@@ -35,14 +37,29 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
     {"color": Colors.blue, "name": "Default Color"},
   ];
 
+  void createColorOption(BuildContext context) {
+    colorOptions = [
+      {"color": Colors.deepPurpleAccent, "name": AppLocale.purple.getString(context)},
+      {"color": Colors.pinkAccent, "name": AppLocale.pink.getString(context)},
+      {"color": Colors.red, "name": AppLocale.red.getString(context)},
+      {"color": Colors.orange, "name": AppLocale.orange.getString(context)},
+      {"color": Colors.yellowAccent, "name": AppLocale.yellow.getString(context)},
+      {"color": Colors.greenAccent, "name": AppLocale.lightGreen.getString(context)},
+      {"color": Colors.green, "name": AppLocale.green.getString(context)},
+      {"color": Colors.blueGrey, "name": AppLocale.grey.getString(context)},
+      {"color": Colors.blue, "name": AppLocale.default_color.getString(context)},
+    ];
+  }
+
+  String formatDateTime(DateTime dateTime) {
+    return DateFormat('MM/dd/yyyy hh:mm a').format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     double bottomSheetHeight = MediaQuery.of(context).size.height * 0.8;
     var provider = Provider.of<CalendarEventProvider>(context);
-
-    String formatDateTime(DateTime dateTime) {
-      return DateFormat('MM/dd/yyyy hh:mm a').format(dateTime);
-    }
+    createColorOption(context);
 
     return Container(
       height: bottomSheetHeight,
