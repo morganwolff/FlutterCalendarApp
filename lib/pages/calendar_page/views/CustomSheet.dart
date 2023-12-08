@@ -222,9 +222,9 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text(AppLocale.add_to_calendar.getString(context)),
-                  Text(provider.chungAngCalendar ? "Chung Ang" : "Personal",
+                  Text(provider.chungAngCalendar ? AppLocale.chungang.getString(context) : AppLocale.personal.getString(context),
                       style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+                          const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),
