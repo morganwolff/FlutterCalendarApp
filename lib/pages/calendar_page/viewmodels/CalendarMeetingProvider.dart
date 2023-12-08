@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_calendar_app/common/utils/chung_ang_time_converter.dart';
 import 'package:flutter_calendar_app/locals/local_storage.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/models/chung_ang_class_model.dart';
-import 'package:flutter_calendar_app/pages/login/viewmodels/LoginVewModel.dart';
+import 'package:flutter_calendar_app/pages/login_page/viewmodels/LoginVewModel.dart';
 import 'package:flutter_calendar_app/pages/to_do_list/models/to_do_list_model.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -228,7 +228,7 @@ class CalendarEventProvider with ChangeNotifier {
 
     await getMeetingFromLocalStorage();
     await loginProvider.fetchData("50231619");
-    var apiRes = loginProvider.getUserCAUPlanning();
+    var apiRes = loginProvider.get_planningWeekCau();
     print(apiRes.toString());
     print(_meetingsMap["chungang"]!.length);
     if (_meetingsMap["chungang"]!.isEmpty) {
