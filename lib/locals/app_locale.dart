@@ -1,6 +1,3 @@
-//import 'dart:html';
-import 'dart:math';
-
 mixin AppLocale {
   static const List<String> supportedLanguages = ['en', 'fr', 'es', 'kr'];
   static const List<String> actualLanguage = ['en', 'fr', 'es', 'kr'];
@@ -57,6 +54,9 @@ mixin AppLocale {
   static const String default_color = "Default color";
   static const String go_back = "Go back to settings";
   static const String select_lang = "select a language: ";
+  static const String change_theme = "Change the theme mode";
+  static const String theme_light = "light";
+  static const String theme_dark = "dark";
   static const String log_in = "Log in to Chung Ang";
   static const String mail_pwd = "Wrong E-mail or password";
   static const String sign_up_first = "Sign up first";
@@ -126,6 +126,9 @@ mixin AppLocale {
     default_color: "Default color",
     go_back: "Go back to settings",
     select_lang: "Select a language: ",
+    change_theme: "Change the theme mode",
+    theme_light: "Light",
+    theme_dark: "Dark",
     log_in: "Log in to Chung Ang",
     error_con: "ERROR: E-mail",
     mail_pwd: "Wrong E-mail or password",
@@ -195,7 +198,10 @@ mixin AppLocale {
     purple: "Violet",
     default_color: "Couleur par défaut",
     go_back: "Revenir aux paramètres",
-    select_lang: "Sélectionnez une langue",
+    select_lang: "Sélectionnez une langue:",
+    change_theme: "Changez le mode du thème: ",
+    theme_light: "Clair",
+    theme_dark: "Sombre",
     log_in: "Connectez-vous à Chung Ang",
     error_con: "ERREUR: E-mail",
     mail_pwd: "E-mail ou mot de passe erroné",
@@ -266,6 +272,9 @@ mixin AppLocale {
     default_color: "Color predeterminado",
     go_back: "Volver a configuración",
     select_lang: "Seleccionar un idioma: ",
+    change_theme: "Cambiar el modo del tema: ",
+    theme_light: "Claro",
+    theme_dark: "Oscuro",
     log_in: "Iniciar sesión en Chung Ang",
     error_con: "ERROR: Correo electrónico",
     mail_pwd: "Correo electrónico o contraseña incorrectos",
@@ -283,7 +292,7 @@ mixin AppLocale {
   };
 
   static const Map<String, dynamic> KR = {
-    currentLanguage: "ko",
+    currentLanguage: "kr",
     title: "제목",
     connection: "연결",
     welcome_back: "캘린더에 다시 오신 것을 환영합니다",
@@ -335,6 +344,9 @@ mixin AppLocale {
     default_color: "기본 색상",
     go_back: "설정으로 돌아가기",
     select_lang: "언어 선택: ",
+    change_theme: "테마 모드 변경하기: ",
+    theme_light: "밝은",
+    theme_dark: "어두운",
     log_in: "충앙대에 로그인",
     error_con: "오류: 이메일",
     mail_pwd: "잘못된 이메일 또는 비밀번호",
