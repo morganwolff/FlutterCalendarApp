@@ -57,6 +57,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
+    themeProvider.initDarkMode();
     return MaterialApp(
       title: 'Calendar App',
       debugShowCheckedModeBanner: false,
