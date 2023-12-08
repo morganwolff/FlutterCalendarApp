@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_calendar_app/locals/app_locale.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/models/MeetingModel.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
+import 'package:flutter_localization/flutter_localization.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 import 'CalendarEventDetailsPage.dart';
@@ -23,7 +25,7 @@ class _CalendarPageState extends State<CalendarPage> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: const Text('Calendar'),
+        title: Text(AppLocale.calendar.getString(context)),
         leading: IconButton(
           icon: const Icon(Icons.menu),
           onPressed: () => _scaffoldKey.currentState?.openDrawer(),
@@ -39,40 +41,40 @@ class _CalendarPageState extends State<CalendarPage> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            const SizedBox(
+            SizedBox(
               height: 150,
               child: DrawerHeader(
-                decoration: BoxDecoration(color: Colors.blue),
-                child: Text('Flutter Calendar',
-                    style: TextStyle(color: Colors.white, fontSize: 24)),
+                decoration: const BoxDecoration(color: Colors.blue),
+                child: Text(AppLocale.FCA.getString(context),
+                    style: const TextStyle(color: Colors.white, fontSize: 24)),
               ),
             ),
-            const DrawerItemWidget(
+            DrawerItemWidget(
                 icon: Icons.view_agenda_outlined,
-                text: 'Planning',
+                text: AppLocale.planning.getString(context),
                 view: CalendarView.schedule,
                 index: 0),
-            const DrawerItemWidget(
+            DrawerItemWidget(
               icon: Icons.calendar_view_day_outlined,
-              text: 'Day',
+              text: AppLocale.day.getString(context),
               view: CalendarView.day,
               index: 1,
             ),
-            const DrawerItemWidget(
+            DrawerItemWidget(
               icon: Icons.calendar_view_week_outlined,
-              text: 'Week',
+              text: AppLocale.week.getString(context),
               view: CalendarView.week,
               index: 2,
             ),
-            const DrawerItemWidget(
+            DrawerItemWidget(
               icon: Icons.calendar_view_month_outlined,
-              text: 'Month',
+              text: AppLocale.month.getString(context),
               view: CalendarView.month,
               index: 3,
             ),
             const Divider(),
             SwitchListTile(
-              title: const Text('Chung Ang'),
+              title: Text(AppLocale.chungang.getString(context)),
               value: provider.isChungAngCalendarView,
               onChanged: (bool value) {
                 setState(() {
@@ -86,7 +88,7 @@ class _CalendarPageState extends State<CalendarPage> {
               secondary: const Icon(Icons.school),
             ),
             SwitchListTile(
-              title: const Text('Personal'),
+              title: Text(AppLocale.personal.getString(context)),
               value: provider.isPersonalCalendarView,
               onChanged: (bool value) {
                 setState(() {
@@ -137,8 +139,8 @@ class _CalendarPageState extends State<CalendarPage> {
             );
           }
           else {
-            return const Center(
-              child: Text("Fetching your meetings and events..."),
+            return Center(
+              child: Text(AppLocale.fetching_event.getString(context)),
             );
           }
         },

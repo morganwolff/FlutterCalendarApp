@@ -27,6 +27,7 @@ mixin AppLocale {
   static const String empty_pwd = "Password is empty.";
   static const String empty_id = "Student Id number is empty.";
   static const String error_con = "ERROR: E-mail";
+  static const String fetching_event = "fetchingEvents";
 
   static const String calendar = "Calendar";
   static const String FCA = "Flutter Calendar APP";
@@ -70,6 +71,7 @@ mixin AppLocale {
   static const String must_provide_four = "Your password must provide at least 4 characters.";
   static const String failed_to_load = 'Failed to load data';
   static const String already_used = 'The email is already used. You should change the email address.';
+  static const String chungang = "chungang";
 
   static const Map<String, dynamic> EN = {
     currentLanguage:"en",
@@ -80,6 +82,8 @@ mixin AppLocale {
     task: "Task",
     newElement: "New element",
     add: "Add",
+    chungang: "Chung Ang",
+    fetching_event: "Fetching your meetings and events...",
 
     connection: "CONNECTION",
     welcome_back: "WELCOME BACK TO YOUR CALENDAR",
@@ -162,7 +166,8 @@ mixin AppLocale {
     not_matching: "Les cartes d'identité des étudiants ne correspondent pas.",
     empty_pwd: "Le mot de passe est vide.",
     empty_id: "Le numéro d'identification de l'étudiant est vide.",
-
+    chungang: "Chung Ang",
+    fetching_event: "Récupération de vos réunions et événements...",
 
     calendar: "Calendrier",
     FCA: "Application Calendrier Flutter",
@@ -229,6 +234,8 @@ mixin AppLocale {
     task: "Tarea",
     newElement: "Nuevo Elemento",
     add: "Agregar",
+    chungang: "Chung Ang",
+    fetching_event: "Obteniendo sus reuniones y eventos...",
 
     calendar: "Calendario",
     FCA: "Aplicación de Calendario Flutter",
@@ -296,6 +303,8 @@ mixin AppLocale {
     task: "작업",
     newElement: "새로운 항목",
     add: "추가",
+    chungang: "중앙",
+    fetching_event: "회의 및 이벤트 가져오는 중...",
 
     calendar: "캘린더",
     FCA: "플러터 캘린더 앱",
