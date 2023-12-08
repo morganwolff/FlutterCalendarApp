@@ -224,6 +224,11 @@ mixin AppLocale {
     not_matching: "Los números de identificación del estudiante no coinciden.",
     empty_pwd: "La contraseña está vacía.",
     empty_id: "El número de identificación del estudiante está vacío.",
+    toDoLists: "Listas de Tareas",
+    addToDoList: "Agregar una Lista de Tareas",
+    task: "Tarea",
+    newElement: "Nuevo Elemento",
+    add: "Agregar",
 
     calendar: "Calendario",
     FCA: "Aplicación de Calendario Flutter",
@@ -286,6 +291,11 @@ mixin AppLocale {
     not_matching: "학생 ID가 일치하지 않습니다.",
     empty_pwd: "비밀번호가 비어 있습니다.",
     empty_id: "학생 ID 번호가 비어 있습니다.",
+    toDoLists: "할일 목록",
+    addToDoList: "할일 목록 추가",
+    task: "작업",
+    newElement: "새로운 항목",
+    add: "추가",
 
     calendar: "캘린더",
     FCA: "플러터 캘린더 앱",
