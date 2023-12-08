@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 
 import 'common/components/TabBarNavigation.dart';
+import 'components/themes.dart';
 import 'locals/app_locale.dart';
 
 
@@ -13,7 +14,8 @@ void main() {
       MultiProvider(
           providers: [
             ChangeNotifierProvider(create: (_) => CalendarEventProvider()),
-            ChangeNotifierProvider(create: (_) => CreateToDoListProvider())
+            ChangeNotifierProvider(create: (_) => CreateToDoListProvider()),
+            ChangeNotifierProvider(create: (_) => ThemeProvider()),
           ],
           child: const MyApp(),
       )
@@ -54,16 +56,16 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
     return MaterialApp(
       title: 'Calendar App',
       debugShowCheckedModeBanner: false,
       locale: const Locale('en', 'EN'),
       supportedLocales: _localization.supportedLocales,
       localizationsDelegates: _localization.localizationsDelegates,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      theme: themeProvider.isDarkMode
+          ? ThemeData.dark()
+          : ThemeData.light(),
         home: const TabBarPage(),
         //home: const TestDirectoryStorage()
       //home: const LoginPage()
