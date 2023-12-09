@@ -62,7 +62,7 @@ class _ListToDoListState extends State<ListToDoList> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text("${AppLocale.toDoLists.getString(context)} :"),
             IconButton(onPressed: () {

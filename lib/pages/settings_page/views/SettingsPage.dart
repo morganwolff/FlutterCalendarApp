@@ -28,8 +28,8 @@ class _IdentifiersState extends State<Identifiers> {
   Widget build(BuildContext context) {
     return FutureBuilder(
           future: Future.wait([
-            getStudentID(context),
-            getStudentName(context),
+            getStudentID(context), // Future that returns String?
+            getStudentName(context), // Future that returns String?
           ]),
           builder: (
               BuildContext context,
@@ -40,14 +40,16 @@ class _IdentifiersState extends State<Identifiers> {
             } else if (snapshot.hasError) {
               return Center(child: Text('Error: ${snapshot.error}'));
             } else if (!snapshot.hasData || snapshot.data!.any((element) => element == null)) {
+              // Handling the case where any of the futures returns null
               return Center(child: Text('Missing data'));
             } else {
+              // Assuming that we now have all the data and none of it is null
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(snapshot.data![1]!, style: Theme.of(context).textTheme.headlineMedium),
-                  Text(snapshot.data![0]!, style: Theme.of(context).textTheme.titleLarge),
+                  Text(snapshot.data![0]!, style: Theme.of(context).textTheme.bodyMedium),
                 ],
               );
             }
@@ -108,7 +110,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(AppLocale.select_lang.getString(context), style: TextStyle(fontSize: 16),),
+                  Text(AppLocale.select_lang.getString(context),),
                   DropdownButton<String>(
                     value: AppLocale.currentLanguage.getString(context),
                     onChanged: (String? newValue) {
@@ -129,7 +131,7 @@ class _SettingsPageState extends State<SettingsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("${AppLocale.change_theme.getString(context)}    ${themeProvider.isDarkMode ? AppLocale.theme_dark.getString(context) : AppLocale.theme_light.getString(context)}", style: TextStyle(fontSize: 16)),
+                  Text("${AppLocale.change_theme.getString(context)}    ${themeProvider.isDarkMode ? AppLocale.theme_dark.getString(context) : AppLocale.theme_light.getString(context)}"),
                   Switch(
                     value: themeProvider.isDarkMode,
                     onChanged: (value) {
