@@ -21,10 +21,10 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
     super.initState();
     if (widget.meetingUuid != null) {
       var provider = Provider.of<CalendarEventProvider>(context, listen: false);
-      provider.loadMeetingData(widget.meetingUuid!);
+      provider.loadMeetingData(widget.meetingUuid!, notify: false);
     } else {
       var provider = Provider.of<CalendarEventProvider>(context, listen: false);
-      provider.resetEventVariables();
+      provider.resetEventVariables(notify: false);
     }
   }
 

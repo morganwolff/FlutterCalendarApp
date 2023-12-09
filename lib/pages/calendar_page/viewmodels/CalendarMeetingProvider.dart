@@ -141,7 +141,7 @@ class CalendarEventProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  void resetEventVariables() {
+  void resetEventVariables({bool notify = true}) {
     _title = '';
     _description = '';
     _startDate = DateTime.now();
@@ -151,7 +151,9 @@ class CalendarEventProvider with ChangeNotifier {
     _eventColor = Colors.blue;
     _isAllDay = false;
     _toDoLists.clear();
-    notifyListeners();
+    if (notify) {
+      notifyListeners();
+    }
   }
 
   Future<void> selectDate(BuildContext context, bool isStartDate) async {
@@ -375,7 +377,7 @@ class CalendarEventProvider with ChangeNotifier {
     }
   }
 
-  void loadMeetingData(String uuid) {
+  void loadMeetingData(String uuid, {bool notify = true}) {
     var locations = findAllMeetingOccurrences(uuid);
     if (locations.isNotEmpty) {
       String listName = locations.keys.first;
@@ -391,7 +393,9 @@ class CalendarEventProvider with ChangeNotifier {
       _toDoLists.clear();
       _toDoLists.addAll(meetingToEdit.toDoLists);
 
-      notifyListeners();
+      if (notify) {
+        notifyListeners();
+      }
     }
   }
 
