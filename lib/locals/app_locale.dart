@@ -58,6 +58,12 @@ mixin AppLocale {
   static const String change_theme = "Change the theme mode";
   static const String theme_light = "light";
   static const String theme_dark = "dark";
+  static const String deconnexion = "Sign out";
+  static const String deconnexion_alert_title = "Sign out.";
+  static const String deconnexion_alert_text = "Are you sure you want to Sign out?";
+  static const String deconnexion_alert_cancel_button = "Cancel";
+  static const String deconnexion_alert_confirm_button = "confirm";
+
   static const String log_in = "Log in to Chung Ang";
   static const String mail_pwd = "Wrong E-mail or password";
   static const String sign_up_first = "Sign up first";
@@ -131,6 +137,11 @@ mixin AppLocale {
     change_theme: "Change the theme mode",
     theme_light: "Light",
     theme_dark: "Dark",
+    deconnexion: "Sign out",
+    deconnexion_alert_title: "Sign out.",
+    deconnexion_alert_text:"Are you sure you want to Sign out?",
+    deconnexion_alert_cancel_button: "Cancel",
+    deconnexion_alert_confirm_button: "confirm",
     log_in: "Log in to Chung Ang",
     error_con: "ERROR: E-mail",
     mail_pwd: "Wrong E-mail or password",
@@ -205,6 +216,11 @@ mixin AppLocale {
     change_theme: "Changez le mode du thème: ",
     theme_light: "Clair",
     theme_dark: "Sombre",
+    deconnexion:"Déconnexion",
+    deconnexion_alert_title: "Se déconnecter",
+    deconnexion_alert_text:"Êtes-vous sûr de vouloir vous déconnecter?",
+    deconnexion_alert_cancel_button: "Annuler",
+    deconnexion_alert_confirm_button: "Confirmer",
     log_in: "Connectez-vous à Chung Ang",
     error_con: "ERREUR: E-mail",
     mail_pwd: "E-mail ou mot de passe erroné",
@@ -279,6 +295,11 @@ mixin AppLocale {
     change_theme: "Cambiar el modo del tema: ",
     theme_light: "Claro",
     theme_dark: "Oscuro",
+    deconnexion: "Desconexión",
+    deconnexion_alert_title: "Desconectar",
+    deconnexion_alert_text: "¿Estás seguro de que quieres desconectarte?",
+    deconnexion_alert_cancel_button: "Cancelar",
+    deconnexion_alert_confirm_button: "Confirmar",
     log_in: "Iniciar sesión en Chung Ang",
     error_con: "ERROR: Correo electrónico",
     mail_pwd: "Correo electrónico o contraseña incorrectos",
@@ -352,6 +373,11 @@ mixin AppLocale {
     change_theme: "테마 모드 변경하기: ",
     theme_light: "밝은",
     theme_dark: "어두운",
+    deconnexion: "로그아웃",
+    deconnexion_alert_title: "로그아웃",
+    deconnexion_alert_text: "로그아웃 하시겠습니까?",
+    deconnexion_alert_cancel_button: "취소",
+    deconnexion_alert_confirm_button: "확인",
     log_in: "충앙대에 로그인",
     error_con: "오류: 이메일",
     mail_pwd: "잘못된 이메일 또는 비밀번호",

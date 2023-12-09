@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:flutter_calendar_app/locals/app_locale.dart';
@@ -47,7 +48,7 @@ class _IdentifiersState extends State<Identifiers> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Text(snapshot.data![1]!, style: Theme.of(context).textTheme.headlineMedium),
-                  Text(snapshot.data![0]!, style: Theme.of(context).textTheme.titleLarge),
+                  Text(snapshot.data![0]!, style: Theme.of(context).textTheme.titleMedium),
                 ],
               );
             }
@@ -68,6 +69,56 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   String selectedLanguage = AppLocale.supportedLanguages[0];
 
+  Future<void> _showMyDialog(BuildContext context) async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(AppLocale.deconnexion_alert_title.getString(context)),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Expanded(  // Utilisez Expanded ici
+                    child: Column(
+                      children: [
+                        Text(AppLocale.deconnexion_alert_text.getString(context),
+                          style: const TextStyle(fontSize: 16),
+                          softWrap: true,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 3,
+                        ),
+                      ],
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                ElevatedButton(
+                  child: Text(AppLocale.deconnexion_alert_cancel_button.getString(context)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                ElevatedButton(
+                  child: Text(AppLocale.deconnexion_alert_confirm_button.getString(context)),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    FirebaseAuth.instance.signOut();
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
@@ -79,7 +130,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: Center(
         child: Padding(
-          padding: const EdgeInsets.all(40.0),
+          padding: const EdgeInsets.all(20.0),
           child: Column(
             children: [
               Stack(
@@ -108,6 +159,18 @@ class _SettingsPageState extends State<SettingsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  Text("${AppLocale.change_theme.getString(context)}    ${themeProvider.isDarkMode ? AppLocale.theme_dark.getString(context) : AppLocale.theme_light.getString(context)}", style: TextStyle(fontSize: 16),),
+                  Switch(
+                    value: themeProvider.isDarkMode,
+                    onChanged: (value) {
+                      themeProvider.toggleTheme();
+                    },
+                  ),
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Text(AppLocale.select_lang.getString(context), style: TextStyle(fontSize: 16),),
                   DropdownButton<String>(
                     value: AppLocale.currentLanguage.getString(context),
@@ -129,12 +192,10 @@ class _SettingsPageState extends State<SettingsPage> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("${AppLocale.change_theme.getString(context)}    ${themeProvider.isDarkMode ? AppLocale.theme_dark.getString(context) : AppLocale.theme_light.getString(context)}", style: TextStyle(fontSize: 16),),
-                  Switch(
-                    value: themeProvider.isDarkMode,
-                    onChanged: (value) {
-                      themeProvider.toggleTheme();
-                    },
+                  Text(AppLocale.deconnexion.getString(context), style: TextStyle(fontSize: 16),),
+                  IconButton(
+                      onPressed: () => _showMyDialog(context),
+                      icon: Icon(Icons.logout, size: 32,)
                   ),
                 ],
               ),
