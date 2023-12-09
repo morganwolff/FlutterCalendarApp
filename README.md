@@ -1,12 +1,12 @@
 # FlutterCalendarApp
 
-Welcome to our mobile application developed in Flutter during our first semester of the mobile development course. Our team is thrilled to present a versatile and user-centric solution for all your scheduling needs!
+Welcome to our Flutter-based mobile application, developed as a final semester project for our mobile development course. Our team is proud to introduce this innovative tool designed to assist students in managing their schedules by directly retrieving their timetables through the CAUportal API.
 
 ## **Main Features:**
 
 ### **1. Personalizable Interactive Calendar**
-- **Multiple Calendars**: Create various calendars tailored to different needs, e.g., personal activities, classes, and more.
-- **Merge Calendars**: Seamlessly combine calendars for a comprehensive view of your schedules.
+- **Multiple Viewing Options**: Experience various views like day, week, and month planning to suit your preference.
+- **Dual Calendar Display**: Choose between both of your calendars to display your events, you can select both at the same time
 
 ### **2. Integration with Chung Ang University API**
 - **Automatic Course Calendar**: If access is granted, our app will fetch your assigned courses from the Chung Ang University API and create a dedicated calendar for your classes.
@@ -14,36 +14,44 @@ Welcome to our mobile application developed in Flutter during our first semester
 
 ## **Supplementary Features:**
 
-### **1. Conflict Detection**
-- The application identifies potential overlaps or conflicts between your scheduled activities and brings them to your attention.
+### **1. Settings / Profile Page**
+- [ ] Customize your user experience:
+    - [ ] Update your name.
+    - [ ] Choose your preferred color scheme.
+    - [x] Toggle between light and dark modes.
+    - [x] Select your desired application language.
 
-### **2. Profile Page**
-- Customize your user experience:
-    * Update your name.
-    * Choose your preferred color scheme.
-    * Toggle between light and dark modes.
-    * Select your desired application language.
+- [x] Display user name and student ID
 
-### **3. Notification System**
-- Get timely alerts before the commencement of a scheduled activity to ensure you never miss out!
+### **2. Notification System**
+- [ ] Get timely alerts before the commencement of a scheduled activity to ensure you never miss out!
 
-### **4. Integrated 'To-Do' List**
-- Organize your tasks efficiently with our 'To-Do' list feature.
-- Create varied checklists and, furthermore, link them directly to specific activities in your calendar for streamlined management.
-
----
-
-## **Getting Started:**
-
-1. **Installation**: Download the application from the .apk 
-2. **Setup**: Follow the on-screen instructions to set up your profile and preferences.
-3. **Integration**: If you're a Chung Ang University student, integrate your course schedule with a simple login.
-4. **Personalization**: Dive in, create your calendars, and manage your schedules the way you want!
-
----
+### **3. Integrated 'To-Do' List**
+- [x] Organize your tasks efficiently with our 'To-Do' list feature.
+- [x] Create varied checklists and, furthermore, link them directly to specific events in your calendar for streamlined management.
 
 ## **Developed by:**
-*Tran,
-Nathan,
-Morgan,
-Mickey*
+- **Trân** (**Project Leader**)
+    - Cache managment
+    - Translation managment
+    - To-Do List
+    - Convert calendar from Chung Ang API and add it to our application.
+- **Morgan** (**Project owner**)
+    - Calendar page
+        - Drawer for calendar view preference
+        - Create an event
+        - View event details
+        - Modify selected event 
+        - Delete selected event from calendar
+    - Settings page
+        - Display username and student ID
+        - Implement translation and theme managment
+    - Navigation Tab Bar
+    - User Documentation for Calendar Page
+- **Nathan**
+    - Login and Register to Firebase
+        - Login and register page creation
+    - Get Chung Ang API for students calendar
+- **Mickey**
+    - Translation managment
+    - Theme managment
