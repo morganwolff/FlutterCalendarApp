@@ -20,8 +20,8 @@ Welcome to our Flutter-based mobile application, developed as a final semester p
     - [ ] Choose your preferred color scheme.
     - [x] Toggle between light and dark modes.
     - [x] Select your desired application language.
-
 - [x] Display user name and student ID
+- [x] Signout button
 
 ### **2. Notification System**
 - [ ] Get timely alerts before the commencement of a scheduled activity to ensure you never miss out!
@@ -45,9 +45,9 @@ Welcome to our Flutter-based mobile application, developed as a final semester p
         - Delete selected event from calendar
     - Settings page
         - Display username and student ID
-        - Implement translation and theme managment
+        - Implement translation and theme 
+        managment
     - Navigation Tab Bar
-    - User Documentation for Calendar Page
 - **Nathan**
     - Login and Register to Firebase
         - Login and register page creation
