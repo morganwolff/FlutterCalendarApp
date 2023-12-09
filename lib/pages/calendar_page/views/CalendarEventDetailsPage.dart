@@ -62,26 +62,26 @@ class EventDetailsPage extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.only(top: 5.0),
                     child: ColoredBox(
-                      color: (provider.meetingsMap[provider
-                          .selectedCalendar]![indexes[provider
-                          .selectedCalendar]!].background),
+                      color: provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].background,
                       child: const SizedBox(height: 30, width: 30),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0, top: 5.0),
-                    child: Column(
-                      children: [
-                        Text(
-                            (provider.meetingsMap[provider
-                                .selectedCalendar]![indexes[provider
-                                .selectedCalendar]!].title),
-                            style: const TextStyle(
-                                fontSize: 26, fontWeight: FontWeight.bold)
-                        ),
-                      ],
+                  Expanded(  // Utilisez Expanded ici
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10.0, top: 5.0, right: 10),
+                      child: Column(
+                        children: [
+                          Text(
+                            provider.meetingsMap[provider.selectedCalendar]![indexes[provider.selectedCalendar]!].title,
+                            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                            softWrap: true,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 3,
+                          ),
+                        ],
+                      ),
                     ),
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 20),
