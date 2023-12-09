@@ -153,9 +153,7 @@ class _CalendarPageState extends State<CalendarPage> {
             );
           }
           else {
-            return Center(
-              child: Text(AppLocale.fetching_event.getString(context)),
-            );
+            return Center(child: CircularProgressIndicator());
           }
         },
       )
