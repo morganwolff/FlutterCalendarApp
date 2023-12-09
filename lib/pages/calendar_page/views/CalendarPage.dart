@@ -41,13 +41,9 @@ class _CalendarPageState extends State<CalendarPage> {
         ),
         actions: <Widget>[
           IconButton(
-            icon: const Icon(Icons.add),
+            icon: const Icon(Icons.add, size: 35,),
             onPressed: () => _showBottomSheet(context),
           ),
-          IconButton(onPressed: ()
-          {
-            FirebaseAuth.instance.signOut();
-          }, icon: Icon(Icons.logout)),
         ],
 
       ),
@@ -58,7 +54,7 @@ class _CalendarPageState extends State<CalendarPage> {
             SizedBox(
               height: 150,
               child: DrawerHeader(
-                decoration: const BoxDecoration(color: Colors.blue),
+                decoration: const BoxDecoration(color: Colors.black87),
                 child: Text(AppLocale.FCA.getString(context),
                     style: const TextStyle(color: Colors.white, fontSize: 24)),
               ),
@@ -210,7 +206,11 @@ class _DrawerItemWidgetState extends State<DrawerItemWidget> {
           color: provider.selectedDrawerIndex == widget.index
               ? Colors.blue
               : null),
-      title: Text(widget.text),
+      title: Text(widget.text,
+          style: TextStyle(color: provider.selectedDrawerIndex == widget.index
+              ? Colors.blue
+              : null),
+          ),
       onTap: () {
         provider.setCalendarView(widget.view);
         provider.setSelectedDrawerIndex(widget.index);

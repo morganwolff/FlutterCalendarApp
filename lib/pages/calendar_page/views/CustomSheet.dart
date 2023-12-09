@@ -299,7 +299,7 @@ class _MyCustomBottomSheetState extends State<MyCustomBottomSheet> {
       builder: (BuildContext context) {
         var provider = Provider.of<CalendarEventProvider>(context);
         return AlertDialog(
-          title: const Text('Choisir une couleur'),
+          title: Text(AppLocale.choose_color.getString(context)),
           content: SingleChildScrollView(
             child: Column(
               children: colorOptions
