@@ -52,6 +52,9 @@ Welcome to our Flutter-based mobile application, developed as a final semester p
     - Login and Register to Firebase
         - Login and register page creation
     - Get Chung Ang API for students calendar
+    - Firestore management 
+    - Firebase management
+
 - **Mickey**
     - Translation managment
     - Theme managment
