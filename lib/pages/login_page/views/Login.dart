@@ -28,6 +28,7 @@ class _LoginPage extends State<LoginPage> {
         Provider.of<UserInformationModel>(context, listen: false);
 
     return Scaffold(
+        resizeToAvoidBottomInset : false,
         body: Form(
             key: _formKey,
             child: Column(

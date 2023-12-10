@@ -31,6 +31,7 @@ class _SubscribePage extends State<SubscribePage> {
         Provider.of<UserInformationModel>(context, listen: false);
 
     return Scaffold(
+        resizeToAvoidBottomInset : false,
         body: Form(
             key: _formKey,
             child: Column(

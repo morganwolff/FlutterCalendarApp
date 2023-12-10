@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_calendar_app/firebase_options.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'Pages/login_page/models/UserInformationModel.dart';
-import 'components/SplashScreen.dart';
 import 'locals/app_locale.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_calendar_app/pages/calendar_page/viewmodels/CalendarMeetingProvider.dart';
@@ -16,20 +15,20 @@ import 'components/themes.dart';
 
 void main() async {
 
-   WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    );
-  
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(
       MultiProvider(
-          providers: [
-            ChangeNotifierProvider(create: (_) => CalendarEventProvider()),
-            ChangeNotifierProvider(create: (_) => CreateToDoListProvider()),
-            ChangeNotifierProvider(create: (_) => ThemeProvider()),
-            ChangeNotifierProvider(create: (_) => UserInformationModel()),
-          ],
-          child: const MyApp(),
+        providers: [
+          ChangeNotifierProvider(create: (_) => CalendarEventProvider()),
+          ChangeNotifierProvider(create: (_) => CreateToDoListProvider()),
+          ChangeNotifierProvider(create: (_) => ThemeProvider()),
+          ChangeNotifierProvider(create: (_) => UserInformationModel()),
+        ],
+        child: const MyApp(),
       )
   );
 }
@@ -70,7 +69,6 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     themeProvider.initDarkMode();
-
     return MaterialApp(
       title: 'Calendar App',
       debugShowCheckedModeBanner: false,
@@ -83,7 +81,14 @@ class _MyAppState extends State<MyApp> {
       home: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
-          return const SplashScreen();
+
+          if (snapshot.hasData) {
+            return const  TabBarPage();
+          }
+          else {
+            return const LoginPage();
+          }
+
         },
       ),
     );
